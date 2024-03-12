@@ -8,19 +8,26 @@
 #include <sstream>
 #include <cmath>
 
-Instance TSPReader::Read(const std::filesystem::path& filepath)
+Instance TSPReader::Read(const std::filesystem::path& filepath, bool bSavePositions)
 {
     auto nodesPositions = ReadNodesPositions(filepath);
     auto distanceMatrix = NodesPositionsToDistanceMatrix(nodesPositions);
-	return Instance(distanceMatrix);
+
+    if (bSavePositions) {
+        return Instance(distanceMatrix, nodesPositions);
+    }
+    else {
+        return Instance(distanceMatrix);
+    }
+	
 }
 
-std::vector<std::vector<int>> TSPReader::ReadNodesPositions(const std::filesystem::path& filepath)
+std::vector<std::array<int, 2>> TSPReader::ReadNodesPositions(const std::filesystem::path& filepath)
 {
     std::string line;
     std::ifstream file(filepath);
 
-    std::vector<std::vector<int>> positions{};
+    std::vector<std::array<int, 2>> positions{};
 
     bool isInNodeCoordSection = false;
     int instanceSize = 0;       // number of nodes in the instance
@@ -52,7 +59,7 @@ std::vector<std::vector<int>> TSPReader::ReadNodesPositions(const std::filesyste
     return positions;
 }
 
-std::vector<std::vector<int>> TSPReader::NodesPositionsToDistanceMatrix(const std::vector<std::vector<int>>& nodesPositions)
+std::vector<std::vector<int>> TSPReader::NodesPositionsToDistanceMatrix(const std::vector<std::array<int, 2>>& nodesPositions)
 {
     int size = nodesPositions.size();
     std::vector<std::vector<int>> distances(size);

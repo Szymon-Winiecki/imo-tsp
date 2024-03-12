@@ -19,6 +19,9 @@ int main() {
     Instance instance = reader.Read(absoluteDataPath);
 
     // get distance between two nodes like that:
+    std::cout << "distance from node 7 to node 10: " << instance.Distance(7, 10) << "\n";
+
+    // or like that:
     std::cout << "distance from node 7 to node 10: " << instance(7, 10) << "\n";
 
     return 0;
