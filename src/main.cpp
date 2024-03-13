@@ -1,11 +1,11 @@
 #include <cmath>
-#include <matplot/matplot.h>
-
 #include <iostream>
 #include <filesystem>
 
 #include "../include/TSPReader.h"
 #include "../include/Instance.h"
+#include "../include/NearestNeighborSolver.h"
+#include "../include/Result.h"
 
 namespace fs = std::filesystem;
 
@@ -23,6 +23,11 @@ int main() {
 
     // or like that:
     std::cout << "distance from node 7 to node 10: " << instance(7, 10) << "\n";
+
+    NearestNeighborSolver solver = NearestNeighborSolver(&instance);
+    Result* result = solver.Solve();
+
+    result->Plot();
 
     return 0;
 }

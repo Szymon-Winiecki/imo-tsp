@@ -14,8 +14,10 @@ public:
 	}
 
 	const int& operator()(int x, int y) const;
-	inline const int& Distance(int x, int y) const;
-	inline int Size() const;
+	const int& Distance(int x, int y) const;
+	const int& PositionX(int node) const;
+	const int& PositionY(int node) const;
+	int Size() const;
 
 private:
 	int size;

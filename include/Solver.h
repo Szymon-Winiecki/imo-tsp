@@ -1,6 +1,8 @@
 #pragma once
 
-#include<cstdlib>
+#include <cstdlib>
+#include <ctime>
+#include <vector>
 
 class Instance;
 class Result;
@@ -8,7 +10,7 @@ class Result;
 class Solver 
 {
 public:
-	Solver(Instance* instance) : Instance(instance, (unsigned int) time(NULL)) {}
+	Solver(Instance* instance) : Solver(instance, (unsigned int) time(NULL)) {}
 
 	Solver(Instance* instance, unsigned int seed) : instance { instance } 
 	{
@@ -24,12 +26,12 @@ public:
 		return instance;
 	}
 
-	virtual Result* Solve() = 0;
+	virtual Result* Solve(int routes = 2) = 0;
 
-private:
+protected:
 
-	inline int RandomInt(int min, int max) const;
-	inline int GetRandomNode() const;
+	int RandomInt(int min, int max) const;
+	int GetRandomNode() const;
 
 	Instance* instance;
 };
