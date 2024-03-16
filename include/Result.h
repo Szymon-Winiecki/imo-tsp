@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <array>
+#include <filesystem>
 
 class Instance;
 
@@ -15,6 +16,7 @@ public:
 	void AddEdge(int route, int start, int end);
 
 	void Plot();
+	void ExportAsJSON(const std::filesystem::path& path, bool pretty = false);
 private:
 	Instance* instance;
 	std::vector<EdgeList_t> routes;

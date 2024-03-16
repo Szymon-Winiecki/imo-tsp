@@ -2,7 +2,8 @@
 
 #include "../include/Instance.h"
 
-#include <matplot/matplot.h>
+#include <sstream>
+#include <fstream>
 
 Result::Result(Instance* instance, int routesCount)
 {
@@ -30,39 +31,66 @@ void Result::AddEdge(int route, int start, int end)
  
 void Result::Plot()
 {
-    int numberOfEdges = 0;
-    for (auto route : routes) {
-        numberOfEdges += route.size();
-    }
+    
+}
 
-    using namespace matplot;
-    std::vector<std::pair<size_t, size_t>> edges{};
-    edges.resize(numberOfEdges);
+void Result::ExportAsJSON(const std::filesystem::path& path, bool pretty)
+{
+    std::stringstream JSON_Constructor("");
 
-    int e = 0;
-    for (auto route : routes) {
-        for (auto edge : route) {
-            edges[e++] = { edge[0], edge[1] };
+
+    // GRAPH INFO
+    JSON_Constructor << "{\"num_nodes\":" << instance->Size() << ",";
+    JSON_Constructor << "\"num_routes\":" << routes.size() << ",";
+    JSON_Constructor << "\"route_length\":[";
+
+    for (int i = 0; i < routes.size(); ++i) 
+    {
+        JSON_Constructor << routes[i].size();
+        if (i != routes.size() - 1) 
+        {
+            JSON_Constructor << ",";
         }
     }
+    JSON_Constructor << "],";
 
-    if (edges.empty()) {
-        edges = { {0, 0} }; // add self-loop, because matplot++ can't create graph without edges
+    // NODES POSITIONS
+    JSON_Constructor << "\"positions\":[";
+    for (int i = 0; i < instance->Size(); ++i)
+    {
+        JSON_Constructor << "[" << instance->PositionX_Normalized(i) << "," << instance->PositionY_Normalized(i) << "]";
+        if (i != instance->Size() - 1)
+        {
+            JSON_Constructor << ",";
+        }
     }
+    JSON_Constructor << "],";
 
-    vector_1d x_data(instance->Size());
-    vector_1d y_data(instance->Size());
-
-    for (int i = 0; i < instance->Size(); ++i) {
-        x_data[i] = instance->PositionX(i);
-        y_data[i] = instance->PositionY(i);
+    // ROUTES
+    JSON_Constructor << "\"routes\":[";
+    for (int i = 0; i < routes.size(); ++i)
+    {
+        // EDGES IN ROUTE
+        JSON_Constructor << "[";
+        for (int j = 0; j < routes[i].size(); ++j)
+        {
+            JSON_Constructor << "[" << routes[i][j][0] << "," << routes[i][j][1] << "]";
+            if (j != routes[i].size() - 1)
+            {
+                JSON_Constructor << ",";
+            }
+        }
+        JSON_Constructor << "]";
+        if (i != routes.size() - 1)
+        {
+            JSON_Constructor << ",";
+        }
     }
+    JSON_Constructor << "]";
 
-    auto g = graph(edges);
-    g->show_labels(false);
+    JSON_Constructor << "}";
 
-    g->x_data(x_data);
-    g->y_data(y_data);
-
-    show();
+    std::ofstream file(path);
+    file << JSON_Constructor.str();
+    file.close();
 }
