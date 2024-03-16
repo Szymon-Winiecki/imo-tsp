@@ -15,7 +15,7 @@ Result* NearestNeighborSolver::Solve(int routesNumber)
 		return new Result(instance);
 	}
 
-	Result* result = new Result(instance);
+	Result* result = new Result(instance, routesNumber);
 
 	int nodesUsedNumber = routesNumber;
 	std::vector<bool> nodesUsed(instance->Size(), false);
@@ -64,6 +64,7 @@ Result* NearestNeighborSolver::Solve(int routesNumber)
 			}
 			lastNode = node;
 		}
+		result->AddEdge(i, lastNode, routes[i].front());
 	}
 
 	return result;
