@@ -32,6 +32,8 @@ protected:
 
 	int RandomInt(int min, int max) const;
 	int GetRandomNode() const;
+	int GetTheFarthestNode(const std::vector<int>& fromNodes);
+	int CalcSumDistanceToNodes(int node, const std::vector<int>& otherNodes);
 
 	Instance* instance;
 };

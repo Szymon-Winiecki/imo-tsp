@@ -22,15 +22,14 @@ Result* NearestNeighborSolver::Solve(int routesNumber)
 
 	std::vector<std::list<int>> routes(routesNumber);
 
-	int startNode = GetRandomNode();
+	std::vector<int> startNodes(0);
+	startNodes.push_back(GetRandomNode());
 	for (int i = 0; i < routes.size(); ++i) 
 	{
-		routes[i].push_front(startNode);
-		nodesUsed[startNode] = true;
-		if (++startNode >= instance->Size()) 
-		{
-			startNode = 0;
-		}
+		routes[i].push_front(startNodes[i]);
+		nodesUsed[startNodes[i]] = true;
+		
+		startNodes.push_back(GetTheFarthestNode(startNodes));
 	}
 
 
