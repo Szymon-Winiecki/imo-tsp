@@ -11,35 +11,38 @@
 
 Result* GreedyCycleSolver::Solve(int routesNumber)
 {
-	if (routesNumber > instance->Size()) {
+	if (routesNumber > instance->Size()) {	// too much routes to construct with given instance (more routes than nodes)
 		return new Result(instance);
 	}
 
 	Result* result = new Result(instance, routesNumber);
 
 	int nodesUsedNumber = routesNumber;
-	std::vector<bool> nodesUsed(instance->Size(), false);
+	std::vector<bool> nodesUsed(instance->Size(), false);	// if node of index x is already included in one of the paths nodesUsed[x] = true, otherwise nodesUsed[x] = false
 
-	std::vector<std::list<int>> routes(routesNumber);
+	std::vector<std::list<int>> routes(routesNumber);	// array of routes; route is a list of nodes indices in the order they are connected; also, it is assumed that last node is connected with first, to close the cycle
 
+	// choosing fisrst node in every path
 	std::vector<int> startNodes(0);
-	startNodes.push_back(GetRandomNode());
+	startNodes.push_back(GetRandomNode());	// start node of the first route is choosed randomly
 	for (int i = 0; i < routes.size(); ++i)
 	{
 		routes[i].push_front(startNodes[i]);
 		nodesUsed[startNodes[i]] = true;
 
-		startNodes.push_back(GetTheFarthestNode(startNodes));
+		startNodes.push_back(GetTheFarthestNode(startNodes));	// next routes starts with the node that is the farthest one form all previous routes start nodes
 	}
 
-
+	// iterate over all contructed cycles and add nodes until all nodes are used
 	int currentRoute = 0;
 	while (nodesUsedNumber < instance->Size())
 	{
+		// find which node and where should be inserted
 		std::pair<int, int> bestInsertion = FindBestInsertion(routes[currentRoute], nodesUsed);
 		int insertAfter = bestInsertion.first;
 		int insertNode = bestInsertion.second;
 
+		// insert node
 		auto insertIterator = std::next(routes[currentRoute].begin(), insertAfter + 1);
 		routes[currentRoute].insert(insertIterator, insertNode);
 		++nodesUsedNumber;
@@ -51,6 +54,7 @@ Result* GreedyCycleSolver::Solve(int routesNumber)
 		}
 	}
 
+	// add all edges of constructed cycles to the result object
 	for (int i = 0; i < routes.size(); ++i)
 	{
 		int lastNode = -1;
@@ -75,11 +79,13 @@ std::pair<int, int> GreedyCycleSolver::FindBestInsertion(const std::list<int>& r
 	int bestSegment = 0;
 	int bestLengthIncrease = std::numeric_limits<int>::max();
 
+	// iterate over all edges in the cycle
 	int currentSegment = 0;
 	for (auto segment = route.begin(); segment != route.end(); segment++) {
 		int segmentStart = *segment;
 		segment++;
 
+		// edge form segmentStart node to segmentEnd node
 		int segmentEnd = -1;
 		if (segment != route.end())
 		{
@@ -91,13 +97,12 @@ std::pair<int, int> GreedyCycleSolver::FindBestInsertion(const std::list<int>& r
 		}
 		segment--;
 
+		// iterate over all unused nodes and find one that the least extends the route length
 		for (int i = 0; i < nodeUsed.size(); ++i) {
-			if (nodeUsed[i]) continue;
+			if (nodeUsed[i]) continue;	// don't check already used nodes
 			int lengthIncrease = 0;
 
-
 			lengthIncrease = instance->Distance(segmentStart, i) + instance->Distance(i, segmentEnd) - instance->Distance(segmentStart, segmentEnd);
-
 
 			if (lengthIncrease < bestLengthIncrease) {
 				bestLengthIncrease = lengthIncrease;
