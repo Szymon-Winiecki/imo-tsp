@@ -6,6 +6,7 @@
 #include "../include/TSPReader.h"
 #include "../include/Instance.h"
 #include "../include/NearestNeighborSolver.h"
+#include "../include/GreedyCycleSolver.h"
 #include "../include/Result.h"
 
 namespace fs = std::filesystem;
@@ -21,8 +22,10 @@ int main() {
 
 
     // run solver
-    NearestNeighborSolver solver = NearestNeighborSolver(&instance);
+    //NearestNeighborSolver solver = NearestNeighborSolver(&instance);
+    GreedyCycleSolver solver = GreedyCycleSolver(&instance);
     Result* result = solver.Solve(2);
+
 
     // create results directory, if not exists
     if (!fs::is_directory(relativeProjectRootDir / "results") || !fs::exists(relativeProjectRootDir / "results")) {
