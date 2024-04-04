@@ -4,6 +4,7 @@
 
 #include <sstream>
 #include <fstream>
+#include <iostream>
 
 Result::Result(Instance* instance, int routesCount)
 {
@@ -93,4 +94,18 @@ void Result::ExportAsJSON(const std::filesystem::path& path, bool pretty)
     std::ofstream file(path);
     file << JSON_Constructor.str();
     file.close();
+}
+
+int Result::getRouteLength()
+{
+	int length = 0;
+    std::cout << routes[0].size() + routes[1].size() << std::endl;
+    for (int i = 0; i < routes.size(); ++i)
+    {
+        for (int j = 0; j < routes[i].size(); ++j)
+        {
+			length += instance->Distance(routes[i][j][0], routes[i][j][1]);
+		}
+	}
+	return length;
 }

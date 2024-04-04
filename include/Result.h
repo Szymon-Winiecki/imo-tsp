@@ -17,6 +17,8 @@ public:
 
 	void Plot();
 	void ExportAsJSON(const std::filesystem::path& path, bool pretty = false);
+
+	int getRouteLength();
 private:
 	Instance* instance;
 	std::vector<EdgeList_t> routes;
