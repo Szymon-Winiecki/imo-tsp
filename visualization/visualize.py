@@ -21,9 +21,7 @@ def get_route_color(route, num_of_routes):
     return f'#{r}{g}{b}'
 
 
-if len(sys.argv) == 1:
-    print('missing input file name')
-    exit(1);
+def visualize(dataset,length,name,path,save_path):
 
 if len(sys.argv) == 2:
     print('missing output file name')
@@ -33,32 +31,58 @@ input_file_name = sys.argv[1]
 file = open(input_file_name, 'r')
 graph_data = json.loads(file.read())
 
-G = nx.Graph()
+    G = nx.Graph()
+    G.add_nodes_from(range(graph_data["num_nodes"]))
+    
+    routes = []
 
-G.add_nodes_from(range(graph_data["num_nodes"]))
+    for route in graph_data["routes"]:
+        G.add_edges_from(route)
+        routes.append({
+            "nodes": set(sum(route, [])),
+            "edges": route,
+            "route_color": get_route_color(len(routes), len(graph_data["routes"])),
+        })
+    
+    positions = {}
+    i = 0
+    for position in graph_data["positions"]:
+        positions[i] = position
+        i += 1
 
-routes = []
+    
+    for route in routes:
+        nx.draw_networkx_nodes(G, positions, nodelist=route["nodes"], node_color=route["route_color"], node_size=50)
+        nx.draw_networkx_edges(G, positions, edgelist=route["edges"], edge_color=route["route_color"], alpha=0.5, width=2)
 
-for route in graph_data["routes"]:
-    G.add_edges_from(route)
-    routes.append({
-        "nodes": set(sum(route, [])),
-        "edges": route,
-        "route_color": get_route_color(len(routes), len(graph_data["routes"])),
-    })
+    title = name + " - " + str(length) + ", '" + dataset
+    plt.title(title)
 
-positions = {}
-i = 0
-for position in graph_data["positions"]:
-    positions[i] = position
-    i += 1
+    output_file_name = os.path.join(save_path,title)
+    #output_file_name = os.path.join("charts",file_names[x] + ".jpg")
+
+    plt.savefig(output_file_name)
+    plt.clf()
+    #plt.show()
+    G.clear()
+
+#file_names = []
+if len(sys.argv) > 1:
+    folder = sys.argv[1]
+else:
+    folder = os.path.abspath(os.path.join(os.getcwd(),os.pardir)) + "\\imo_tsp_2\\results"
+#print(folder)
+#print("------")
+f = open(os.path.join(folder,"results.txt"),"r")
+
+for line in f:
+    data = list(line.split(';'))
+    data[-1] = data[-1][:-1]
+    #min
+    print("Wykresy")
+    path = os.path.join(folder,data[4] + "_" + data[0] + "_" + data[1] + "_e.json")
+    visualize(data[1],data[3],data[0],path,folder)
 
 
-for route in routes:
-    nx.draw_networkx_nodes(G, positions, nodelist=route["nodes"], node_color=route["route_color"], node_size=50)
-    nx.draw_networkx_edges(G, positions, edgelist=route["edges"], edge_color=route["route_color"], alpha=0.5, width=2)
 
-output_file_name = sys.argv[2]
 
-plt.savefig(output_file_name)
-plt.show()
