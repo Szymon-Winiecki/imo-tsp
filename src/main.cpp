@@ -19,7 +19,7 @@ namespace fs = std::filesystem;
 int main() {
 
     fs::path relativeProjectRootDir("../../../");
-    const int experiments = 100;
+    const int experiments = 5;
     const int algorithms = 1;
     int d = 0;
     std::string algorithms_names[3] = { "NearestNeighbor", "Regret", "GreedyCycle" };
@@ -80,11 +80,13 @@ int main() {
     fs::path ResultExportPath = fs::absolute(relativeProjectRootDir / "results");
 
     //experiment.show_results();
-    experiment.save_results(ResultExportPath);
+    fs::path resultsTxtPat = fs::absolute(relativeProjectRootDir / "results" / "results.txt");
+    experiment.save_results(resultsTxtPat);
     
     
     // run python script to draw the graph (the result is both saved in results/plot.png file and displayed on the screen)
-    fs::path plotPath = fs::absolute(relativeProjectRootDir / "results" / "plot.png");
+
+    fs::path visualizerScriptPath = fs::absolute(relativeProjectRootDir / "visualization" / "visualize.py");
     system(std::format("python {} {}", visualizerScriptPath.string(), ResultExportPath.string()).c_str());
     
     return 0;
