@@ -12,7 +12,6 @@
 #include "../include/RegretSolver.h"
 #include "../include/Result.h"
 #include "../include/Experiment.h"
-#include "../include/RegretSolver.h"
 
 namespace fs = std::filesystem;
 
@@ -27,7 +26,7 @@ int main() {
     
 
     // read file with the input data
-    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "kroB100.tsp");
+    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "kroA100.tsp");
     TSPReader reader = TSPReader();
     Instance instance = reader.Read(absoluteDataPath);
     Experiment experiment = Experiment(algorithms);
@@ -46,16 +45,17 @@ int main() {
     
     //for (int j = 0; j < algorithms; j++)
     //{
-    int j = 0;
+    int j = 1;
     for (int i = 0; i < experiments; i++)
     {
         std::string json_output = std::to_string(i) + "_" + algorithms_names[j] + "_" + datasets[d] + "_e.json";
         fs::path exportPath = fs::absolute(relativeProjectRootDir / "results" / json_output);
         if (j == 0)
         {
-            Result* result1 = solver1.Solve(2);
-            length = result1->getRouteLength();
-            result1->ExportAsJSON(exportPath);
+            //Result* result1 = solver1.Solve(2);
+            //length = result1->getRouteLength();
+            //result1->ExportAsJSON(exportPath);
+            int a = 2;
         }
         else if (j == 1)
         {
@@ -81,11 +81,11 @@ int main() {
 
     //experiment.show_results();
     experiment.save_results(ResultExportPath);
-    
+
     
     // run python script to draw the graph (the result is both saved in results/plot.png file and displayed on the screen)
-    fs::path plotPath = fs::absolute(relativeProjectRootDir / "results" / "plot.png");
+    //fs::path plotPath = fs::absolute(relativeProjectRootDir / "results" / "plot.png");
+    fs::path visualizerScriptPath = fs::absolute(relativeProjectRootDir / "visualization" / "visualize.py");
     system(std::format("python {} {}", visualizerScriptPath.string(), ResultExportPath.string()).c_str());
-    
     return 0;
 }

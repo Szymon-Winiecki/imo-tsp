@@ -8,21 +8,19 @@
 #include <iostream>
 #include <fstream>
 #include <numeric>
+#include <string>
 
 #include "../include/Result.h"
 #include "../include/Instance.h"
 #include "../include/NearestNeighborSolver.h"
 #include "../include/GreedyCycleSolver.h"
 
-//Experiment::Experiment(int alg, int length)
-//{
 
-//};
-
-void Experiment::add_result(int alg, int route)
+void Experiment::add_result(int alg, int route, std::string algo, std::string data)
 {
-
 	results[alg].push_back(route);
+	dataset.push_back(data);
+	algorithm.push_back(algo);
 };
 
 void Experiment::show_results()
@@ -46,8 +44,8 @@ void Experiment::save_results(const std::filesystem::path& path)
 	{
 		std::pair<int, int> min = get_min(i);
 		std::pair<int, int> max = get_max(i);
-
-		file << "Algorytm nr: " << i << " mean - " << get_mean(i) << " min - " << min.first << " nr " << min.second << " max - " << max.first << " nr " << max.second << std::endl;
+		//alg/mean/min/max
+		file << algorithm[i] << ";" << dataset[i] << ";" << get_mean(i) << ";" << min.first << ";" << min.second << ";" << max.first << ";" << max.second << std::endl;
 
 	}
 	file.close();

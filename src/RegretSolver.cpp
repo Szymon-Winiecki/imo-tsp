@@ -78,64 +78,59 @@ std::pair<int, int> RegretSolver::FindBestInsertion(const std::list<int>& route,
 {
 	int bestNode = 0;
 	int bestSegment = 0;
+	int currBestSegment = 0;
+	int regret = 0;
 	int bestRegret = 0;
+	std::pair<int, int> lengthIncreases = { std::numeric_limits<int>::max(),std::numeric_limits<int>::max() };
 
-	// iterate over all edges in the cycle
-	int currentSegment = 0;
-	for (auto segment = route.begin(); segment != route.end(); segment++) {
-		int segmentStart = *segment;
-		segment++;
+	for (int i = 0; i < nodeUsed.size(); ++i)
+	{
+		if (nodeUsed[i]) continue;
 
-		// edge form segmentStart node to segmentEnd node
-		int segmentEnd = -1;
-		if (segment != route.end())
+		int currentSegment = 0;
+		for (auto segment = route.begin(); segment != route.end(); segment++)
 		{
-			segmentEnd = *segment;
-		}
-		else
-		{
-			segmentEnd = route.front();
-		}
-		segment--;
+			int segmentStart = *segment;
+			segment++;
 
-		
-		// iterate over all unused nodes and find one that the least extends the route length
-		for (int i = 0; i < nodeUsed.size(); ++i) {
-			if (nodeUsed[i]) continue;	// don't check already used nodes
-
-			int regret = 0;
-			int lengthIncrease = instance->Distance(segmentStart, i) + instance->Distance(i, segmentEnd) - instance->Distance(segmentStart, segmentEnd);
-
-			for (int j = 0; j < nodeUsed.size(); ++j)
+			// edge form segmentStart node to segmentEnd node
+			int segmentEnd = -1;
+			if (segment != route.end())
 			{
-				if (nodeUsed[j]) continue;
-				if (nodeUsed[i]) continue;
-				if (i != j) continue;
-
-				/*std::cout << "--------";
-				for (int i = 0; i < nodeUsed.size(); ++i)
-				{
-					std::cout<<nodeUsed[i]<<" ";
-				}
-				std::cout << std::endl;
-				*/
-
-				int leftCut = instance->Distance(segmentStart, j) + instance->Distance(j, i) - instance->Distance(segmentStart, i);
-				int RightCut = instance->Distance(segmentEnd, j) + instance->Distance(j, i) - instance->Distance(segmentEnd, i);
-				int regret = std::max(lengthIncrease - leftCut, lengthIncrease - RightCut);
-				//std::cout << "max" << regret;
-				if (regret > bestRegret) {
-					//std::cout << "REGRET " << regret << " " << i << " " << currentSegment;
-					bestRegret = regret;
-					bestNode = i;
-					bestSegment = currentSegment;
-				}
-
+				segmentEnd = *segment;
 			}
+			else
+			{
+				segmentEnd = route.front();
+			}
+			segment--;
+
+			int lengthIncrease = instance->Distance(segmentStart, i) + instance->Distance(i, segmentEnd) - instance->Distance(segmentStart, segmentEnd);
+			//std::cout<< lengthIncrease << std::endl;
+			if (lengthIncrease < lengthIncreases.first)
+			{
+				lengthIncreases.second = lengthIncreases.first;
+				lengthIncreases.first = lengthIncrease;
+				currBestSegment = currentSegment;
+			}
+			else if (lengthIncrease < lengthIncreases.second)
+			{
+				lengthIncreases.second = lengthIncrease;
+			}
+			++currentSegment; 
 		}
-
-		++currentSegment;
+		//std::cout <<lengthIncreases.first<<"---"<<lengthIncreases.second<<std::endl;
+		regret = lengthIncreases.first - lengthIncreases.second;
+		//std::cout<< regret;
+		lengthIncreases = { std::numeric_limits<int>::max(),std::numeric_limits<int>::max() };
+		//std::cout<< regret << "---"<<bestRegret << std::endl;
+		if (bestRegret > regret)
+		{
+			bestRegret = regret;
+			bestNode = i;
+			bestSegment = currBestSegment;
+		}
 	}
-
+	std::cout << bestNode << "---" << bestSegment << std::endl;
 	return { bestSegment, bestNode };
 }

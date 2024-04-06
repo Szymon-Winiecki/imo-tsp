@@ -4,6 +4,7 @@
 #include <ctime>
 #include <vector>
 #include <filesystem>
+#include <string>
 
 class Solve;
 class Instance;
@@ -22,7 +23,7 @@ public:
 
 	void save_results(const std::filesystem::path& path);
 
-	void add_result(int alg, int route);
+	void add_result(int alg, int route, std::string algorithm, std::string dataset);
 
 	void show_results();
 
@@ -49,6 +50,8 @@ private:
 	std::pair<int, int> get_max(int alg);
 	int get_mean(int alg);
 	std::vector<std::vector<unsigned int>> results;
+	std::vector<std::string> dataset;
+	std::vector<std::string> algorithm;
 //protected:
 
 	//int RandomInt(int min, int max) const;
