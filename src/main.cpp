@@ -8,6 +8,8 @@
 #include "../include/NearestNeighborSolver.h"
 #include "../include/GreedyCycleSolver.h"
 #include "../include/Result.h"
+#include "../include/Experiment.h"
+#include "../include/RegretSolver.h"
 
 namespace fs = std::filesystem;
 
@@ -82,12 +84,11 @@ int main() {
 
     //experiment.show_results();
     experiment.save_results(ResultExportPath);
-    experiment.save_results(ResultExportPath);
     
-    /*
+    
     // run python script to draw the graph (the result is both saved in results/plot.png file and displayed on the screen)
-    //fs::path plotPath = fs::absolute(relativeProjectRootDir / "results" / "plot.png");
+    fs::path plotPath = fs::absolute(relativeProjectRootDir / "results" / "plot.png");
     system(std::format("python {} {}", visualizerScriptPath.string(), ResultExportPath.string()).c_str());
-    */
+    
     return 0;
 }
