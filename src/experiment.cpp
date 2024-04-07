@@ -18,6 +18,10 @@
 
 void Experiment::add_result(int alg, int route, std::string algo, std::string data)
 {
+	if (results.size() < alg)
+	{
+		results.resize(alg);
+	}
 	results[alg].push_back(route);
 	dataset.push_back(data);
 	algorithm.push_back(algo);
@@ -40,13 +44,19 @@ void Experiment::save_results(const std::filesystem::path& path)
 {
 	std::ofstream file(path);
 
+	for (int j = 0; j < algorithm.size(); j++)
+	{
+		std::cout << algorithm[j] << ";" << dataset[j] << std::endl;
+	}
+	int j = 0;
 	for (int i = 0; i < results.size(); i++)
 	{
+		if (results[i].size() == 0) continue;
 		std::pair<int, int> min = get_min(i);
 		std::pair<int, int> max = get_max(i);
 		//alg/mean/min/max
-		file << algorithm[i] << ";" << dataset[i] << ";" << get_mean(i) << ";" << min.first << ";" << min.second << ";" << max.first << ";" << max.second << std::endl;
-
+		file << algorithm[j] << ";" << dataset[i] << ";" << get_mean(i) << ";" << min.first << ";" << min.second << ";" << max.first << ";" << max.second << std::endl;
+		j += results[i].size();
 	}
 	file.close();
 };

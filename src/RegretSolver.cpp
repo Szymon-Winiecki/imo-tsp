@@ -131,6 +131,6 @@ std::pair<int, int> RegretSolver::FindBestInsertion(const std::list<int>& route,
 			bestSegment = currBestSegment;
 		}
 	}
-	std::cout << bestNode << "---" << bestSegment << std::endl;
+	//std::cout << bestNode << "---" << bestSegment << std::endl;
 	return { bestSegment, bestNode };
 }

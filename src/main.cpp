@@ -20,8 +20,12 @@ int main() {
 
     fs::path relativeProjectRootDir("../../../");
     const int experiments = 5;
-    const int algorithms = 1;
+    const int algorithms = 3;
+    // -1 if all algorithms, if one choose which
+    const int alg_num = -1;
     int d = 0;
+    
+
     std::string algorithms_names[3] = { "NearestNeighbor", "Regret", "GreedyCycle" };
     std::string datasets[2] = { "kroA100", "kroB100"};
     
@@ -44,9 +48,15 @@ int main() {
 
     int length = 0;
     
-    //for (int j = 0; j < algorithms; j++)
-    //{
-    int j = 0;
+    for (int j = 0; j < algorithms; j++)
+    {
+        if(alg_num != -1)
+        {
+            if (j != alg_num)
+            {
+				continue;
+			}
+	    }
     for (int i = 0; i < experiments; i++)
     {
         std::string json_output = std::to_string(i) + "_" + algorithms_names[j] + "_" + datasets[d] + "_e.json";
@@ -74,7 +84,7 @@ int main() {
 
 
     }
-    //}
+    }
 
 
     fs::path ResultExportPath = fs::absolute(relativeProjectRootDir / "results");
