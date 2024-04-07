@@ -74,7 +74,7 @@ int LocalSearch::InternalNodeSwapGain(int cycle, int nodeAIndex, int nodeBIndex)
 
 int LocalSearch::InternalEdgeSwapGain(int cycle, int edgeAIndex, int edgeBIndex)
 {
-	if (edgeAIndex > edgeBIndex) 
+	if (edgeAIndex > edgeBIndex)
 	{
 		std::swap(edgeAIndex, edgeBIndex);
 	}
@@ -121,4 +121,3 @@ void LocalSearch::ExternalNodeSwap(int cycleA, int nodeAIndex, int cycleB, int n
 	cycles[cycleA][nodeAIndex] = cycles[cycleB][nodeBIndex];
 	cycles[cycleB][nodeBIndex] = nodeA;
 }
-

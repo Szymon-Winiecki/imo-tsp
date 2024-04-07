@@ -10,9 +10,9 @@ class Instance;
 class LocalSearch
 {
 public:
-	LocalSearch(std::vector<std::vector<int>> initialState, Instance* instance) : LocalSearch(initialState, instance, (unsigned int)time(NULL)) {}
+	LocalSearch(std::vector<std::vector<int>> initialState, Instance* instance, int NodeEdgeInternal) : LocalSearch(initialState, instance, NodeEdgeInternal, (unsigned int)time(NULL)) {}
 
-	LocalSearch(std::vector<std::vector<int>> initialState, Instance* instance, unsigned int seed) : cycles{ initialState }, instance{ instance }
+	LocalSearch(std::vector<std::vector<int>> initialState, Instance* instance, int NodeEdgeInternal, unsigned int seed) : cycles{ initialState }, instance{ instance }, NodeEdgeInternal{ NodeEdgeInternal }
 	{
 		std::srand(seed);
 	}
@@ -36,4 +36,5 @@ protected:
 
 	std::vector<std::vector<int>> cycles;
 	Instance* instance;
+	int NodeEdgeInternal;
 };

@@ -23,6 +23,7 @@ Result::Result(Instance* instance, int routesCount)
 		routes.push_back(EdgeList_t());
 		routes[routes.size() - 1].reserve(instance->Size() / routesCount + asymetricMargin);
 	}
+
 }
 
 void Result::AddEdge(int route, int start, int end)
@@ -109,3 +110,18 @@ int Result::getRouteLength()
 	}
 	return length;
 }
+
+void Result::ListToVectors()
+{
+    //std::cout<<routes.size()<<std::endl;
+    for (int i = 0; i < routes.size(); ++i)
+    {
+        cycles.push_back(std::vector<int>());
+        for (int j = 0; j < routes[i].size(); ++j)
+        {
+			cycles[i].push_back(routes[i][j][0]);
+			//std::cout << routes[i][j][0] << " " << routes[i][j][1] << std::endl;
+		}
+	}
+}
+
