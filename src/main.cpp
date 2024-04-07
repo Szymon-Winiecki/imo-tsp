@@ -13,12 +13,34 @@
 #include "../include/Result.h"
 #include "../include/Experiment.h"
 #include "../include/RegretSolver.h"
+#include "../include/LocalSearch.h"
 
 namespace fs = std::filesystem;
 
 int main() {
 
     fs::path relativeProjectRootDir("../../../");
+    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "test.tsp");
+    TSPReader reader = TSPReader();
+    Instance instance = reader.Read(absoluteDataPath);
+
+    std::vector<std::vector<int>> cycles = { { 0, 1 , 6, 7 }, { 2, 3, 4, 5 } };
+    LocalSearch localSearch(cycles, &instance);
+
+    Result* r = localSearch.Solve();
+
+    fs::path ResultExportPath = fs::absolute(relativeProjectRootDir / "results" / "test_export.json");
+    
+    r->ExportAsJSON(ResultExportPath);
+
+    fs::path plotPath = fs::absolute(relativeProjectRootDir / "results" / "test.png");
+    fs::path visualizerScriptPath = fs::absolute(relativeProjectRootDir / "visualization" / "visualize_single.py");
+    system(std::format("python {} {} {}", visualizerScriptPath.string(), ResultExportPath.string(), plotPath.string()).c_str());
+
+
+    return 0;
+
+    /*fs::path relativeProjectRootDir("../../../");
     const int experiments = 5;
     const int algorithms = 3;
     // -1 if all algorithms, if one choose which
@@ -99,5 +121,5 @@ int main() {
     fs::path visualizerScriptPath = fs::absolute(relativeProjectRootDir / "visualization" / "visualize.py");
     system(std::format("python {} {}", visualizerScriptPath.string(), ResultExportPath.string()).c_str());
     
-    return 0;
+    return 0;*/
 }
