@@ -74,7 +74,7 @@ def visualize(dataset,length,name,path,save_path):
 if len(sys.argv) > 1:
     folder = sys.argv[1]
 else:
-    folder = os.path.abspath(os.path.join(os.getcwd(),os.pardir)) + "\\results"
+    folder = os.path.abspath(os.path.join(os.getcwd(),os.pardir)) + "\\results\\results.txt"
 #print(folder)
 #print("------")
 f = open(os.path.join(folder,"results.txt"),"r")

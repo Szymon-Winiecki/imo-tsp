@@ -19,7 +19,14 @@ public:
 	void ExportAsJSON(const std::filesystem::path& path, bool pretty = false);
 
 	int getRouteLength();
+	void ListToVectors();
+
+	std::vector<std::vector<int>> GetCycles() const {
+		return cycles;
+	}
+
 private:
 	Instance* instance;
 	std::vector<EdgeList_t> routes;
+	std::vector<std::vector<int>> cycles;
 };

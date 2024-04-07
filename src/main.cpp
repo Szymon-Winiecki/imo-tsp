@@ -13,25 +13,47 @@
 #include "../include/Result.h"
 #include "../include/Experiment.h"
 #include "../include/RegretSolver.h"
+#include "../include/RandomSolver.h"
 #include "../include/LocalSearch.h"
+#include "../include/GreedyLocalSearch.h"
+#include "../include/SteepestLocalSearch.h"
 
 namespace fs = std::filesystem;
 
 int main() {
-
+    
     fs::path relativeProjectRootDir("../../../");
-    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "test.tsp");
+    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "kroA100.tsp");
     TSPReader reader = TSPReader();
     Instance instance = reader.Read(absoluteDataPath);
 
     std::vector<std::vector<int>> cycles = { { 0, 1 , 6, 7 }, { 2, 3, 4, 5 } };
-    LocalSearch localSearch(cycles, &instance);
 
-    Result* r = localSearch.Solve();
+    RegretSolver solver4 = RegretSolver(&instance);
+    Result* result1 = solver4.Solve(2);
+
+    //LocalSearch GreedyLocalSearch(cycles, &instance);
+
+    //Result* r = GreedyLocalSearch.Solve();
+    std::cout <<"przed" << result1->getRouteLength() <<std::endl;
+    result1->ListToVectors();
+
+
+    SteepestLocalSearch a = SteepestLocalSearch(result1->GetCycles(), &instance, 0);
+    Result* r = a.Solve();
+    std::cout << "ppo" << r->getRouteLength() << std::endl;
+
+    //GreedyLocalSearch b = GreedyLocalSearch(result1->GetCycles(), &instance, 1);
+    //Result* r2 = b.Solve();
+    //std::cout << "ppo" << r2->getRouteLength() << std::endl;
+
+
+
 
     fs::path ResultExportPath = fs::absolute(relativeProjectRootDir / "results" / "test_export.json");
     
-    r->ExportAsJSON(ResultExportPath);
+
+    result1->ExportAsJSON(ResultExportPath);
 
     fs::path plotPath = fs::absolute(relativeProjectRootDir / "results" / "test.png");
     fs::path visualizerScriptPath = fs::absolute(relativeProjectRootDir / "visualization" / "visualize_single.py");
@@ -39,21 +61,23 @@ int main() {
 
 
     return 0;
+    /*
 
-    /*fs::path relativeProjectRootDir("../../../");
-    const int experiments = 5;
-    const int algorithms = 3;
+    fs::path relativeProjectRootDir("../../../");
+    const int experiments = 1;
+    const int algorithms = 4;
     // -1 if all algorithms, if one choose which
-    const int alg_num = -1;
+    const int alg_num = 3;
     int d = 0;
     
 
-    std::string algorithms_names[3] = { "NearestNeighbor", "Regret", "GreedyCycle" };
+    std::string algorithms_names[4] = { "NearestNeighbor", "Regret", "GreedyCycle","Random"};
     std::string datasets[2] = { "kroA100", "kroB100"};
     
 
     // read file with the input data
-    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "kroB100.tsp");
+    //fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "test.tsp");
+    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "test.tsp");
     TSPReader reader = TSPReader();
     Instance instance = reader.Read(absoluteDataPath);
     Experiment experiment = Experiment(algorithms);
@@ -67,6 +91,7 @@ int main() {
     NearestNeighborSolver solver1 = NearestNeighborSolver(&instance);
     RegretSolver solver2 = RegretSolver(&instance);
     GreedyCycleSolver solver3 = GreedyCycleSolver(&instance);
+    RandomSolver solver4 = RandomSolver(&instance);
 
     int length = 0;
     
@@ -100,6 +125,12 @@ int main() {
             Result* result3 = solver3.Solve(2);
             length = result3->getRouteLength();
             result3->ExportAsJSON(exportPath);
+        }
+        else if (j == 3)
+        {
+            Result* result4 = solver4.Solve(2);
+            length = result4->getRouteLength();
+            result4->ExportAsJSON(exportPath);
         }
 
         experiment.add_result(j, length, algorithms_names[j], datasets[d]);

@@ -55,7 +55,7 @@ void Experiment::save_results(const std::filesystem::path& path)
 		std::pair<int, int> min = get_min(i);
 		std::pair<int, int> max = get_max(i);
 		//alg/mean/min/max
-		file << algorithm[j] << ";" << dataset[i] << ";" << get_mean(i) << ";" << min.first << ";" << min.second << ";" << max.first << ";" << max.second << std::endl;
+		file << algorithm[j] << ";" << dataset[j] << ";" << get_mean(i) << ";" << min.first << ";" << min.second << ";" << max.first << ";" << max.second << std::endl;
 		j += results[i].size();
 	}
 	file.close();
