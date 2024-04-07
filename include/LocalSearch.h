@@ -24,6 +24,7 @@ protected:
 	int NextNodeIndex(int cycle, int nodeIndex) const;
 	int PrevNodeIndex(int cycle, int nodeIndex) const;
 	int DistanceToNeighbours(int cycle, int nodeIndex) const;
+	int EdgeLength(int cycle, int EdgeIndex) const;
 
 	int InternalNodeSwapGain(int cycle, int nodeAIndex, int nodeBIndex);
 	int InternalEdgeSwapGain(int cycle, int edgeAIndex, int edgeBIndex);

@@ -8,4 +8,4 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 include_directories(include)
 file(GLOB SOURCES "src/*.cpp")
 
-add_executable(main ${SOURCES} "src/RegretSolver.cpp" "include/RegretSolver.h" "include/Experiment.h" "src/experiment.cpp")
+add_executable(main ${SOURCES})
