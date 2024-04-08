@@ -17,31 +17,27 @@
 #include "../include/LocalSearch.h"
 #include "../include/GreedyLocalSearch.h"
 #include "../include/SteepestLocalSearch.h"
+#include "../include/RandomWalk.h"
 
 namespace fs = std::filesystem;
 
 int main() {
-    
+
     fs::path relativeProjectRootDir("../../../");
     fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "kroA100.tsp");
     TSPReader reader = TSPReader();
     Instance instance = reader.Read(absoluteDataPath);
 
-    std::vector<std::vector<int>> cycles = { { 0, 1 , 6, 7 }, { 2, 3, 4, 5 } };
-
-    RegretSolver solver4 = RegretSolver(&instance);
+    RandomSolver solver4 = RandomSolver(&instance);
     Result* result1 = solver4.Solve(2);
 
-    //LocalSearch GreedyLocalSearch(cycles, &instance);
-
-    //Result* r = GreedyLocalSearch.Solve();
-    std::cout <<"przed" << result1->getRouteLength() <<std::endl;
+    std::cout <<"przed: " << result1->getRouteLength() <<std::endl;
     result1->ListToVectors();
 
 
-    SteepestLocalSearch a = SteepestLocalSearch(result1->GetCycles(), &instance, 0);
+    RandomWalk a = RandomWalk(result1->GetCycles(), &instance, 1000);
     Result* r = a.Solve();
-    std::cout << "ppo" << r->getRouteLength() << std::endl;
+    std::cout << "po: " << r->getRouteLength() << std::endl;
 
     //GreedyLocalSearch b = GreedyLocalSearch(result1->GetCycles(), &instance, 1);
     //Result* r2 = b.Solve();
@@ -53,7 +49,7 @@ int main() {
     fs::path ResultExportPath = fs::absolute(relativeProjectRootDir / "results" / "test_export.json");
     
 
-    result1->ExportAsJSON(ResultExportPath);
+    r->ExportAsJSON(ResultExportPath);
 
     fs::path plotPath = fs::absolute(relativeProjectRootDir / "results" / "test.png");
     fs::path visualizerScriptPath = fs::absolute(relativeProjectRootDir / "visualization" / "visualize_single.py");

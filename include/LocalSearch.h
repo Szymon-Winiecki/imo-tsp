@@ -7,6 +7,11 @@
 class Result;
 class Instance;
 
+enum class MoveType
+{
+	InternalEdgeSwap, InternalNodeSwap, ExternalNodeSwap
+};
+
 class LocalSearch
 {
 public:
