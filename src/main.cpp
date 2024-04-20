@@ -35,7 +35,7 @@ int main() {
     result1->ListToVectors();
 
 
-    RandomWalk a = RandomWalk(result1->GetCycles(), &instance, 1000);
+    RandomWalk a = RandomWalk(result1->GetCycles(), &instance, 200);
     Result* r = a.Solve();
     std::cout << "po: " << r->getRouteLength() << std::endl;
 
