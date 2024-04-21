@@ -79,7 +79,7 @@ Result* RandomSolver::Solve(int routesNumber)
 std::pair<int, int> RandomSolver::FindBestInsertion(const std::list<int>& route, const std::vector<bool>& nodeUsed, int nodesUsedNumber) const
 {
 	int random  = rand() % (nodeUsed.size() - nodesUsedNumber);
-	std::cout << random << " -- " << nodeUsed.size() - nodesUsedNumber << std::endl;
+	//std::cout << random << " -- " << nodeUsed.size() - nodesUsedNumber << std::endl;
 	int j = 0;
 	for (int i = 0; i < nodeUsed.size(); i++)
 	{

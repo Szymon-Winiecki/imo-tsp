@@ -5,31 +5,107 @@
 #include "../include/Result.h"
 #include "../include/CyclesContext.h"
 
+#include <forward_list>
+#include <iostream>
+
 Result* CachedSteepestLocalSearch::Solve()
 {
-	Result* result = new Result(instance, cycles.size());
+	CyclesContext* context = new CyclesContext(instance, cycles, indexOfNode);
 
 	ConstructInitialMoves();
 
 
-	return nullptr;
+	while (!movesQueue.empty())
+	{
+		std::forward_list<Move*> movesToRestore;
+		Move* nextMove;
+
+		do
+		{
+			nextMove = movesQueue.top();
+			movesQueue.pop();
+
+			if (!(nextMove->ShouldRemove()) && !(nextMove->IsApplicable()))
+			{
+				movesToRestore.push_front(nextMove);
+			}
+
+			
+		} while (!(nextMove->IsApplicable()) && !movesQueue.empty());
+
+		if (nextMove->IsApplicable())
+		{
+			nextMove->Apply();
+		}
+		else {
+			break;
+		}
+
+		for (int node : nextMove->GetAffectedNodes())
+		{
+			int cycle = context->NodeCycle(node);
+			int nodeIndex = context->NodeIndex(node);
+
+			for (int otherCycle = 0; otherCycle < cycles.size(); ++otherCycle)
+			{
+				if (cycle == otherCycle)
+				{
+					continue;
+				}
+
+				for (int otherNodeIndex = 0; otherNodeIndex < cycles[otherCycle].size(); ++otherNodeIndex)
+				{
+					Move* move = new NodeSwapMove(context, cycle, nodeIndex, otherCycle, otherNodeIndex);
+					if (move->GetGain() > 0)
+					{
+						movesQueue.push(move);
+					}
+				}
+			}
+		}
+
+		for (std::array<int, 2> edge : nextMove->GetNewEdges())
+		{
+			int cycle = context->NodeCycle(edge[0]);
+			int edgeIndex = context->NodeIndex(edge[0]);
+
+			for (int otherEdgeIndex = 0; otherEdgeIndex < cycles[cycle].size(); ++otherEdgeIndex)
+			{
+				if (edgeIndex == otherEdgeIndex)
+				{
+					continue;
+				}
+
+				Move* move = new EdgeSwapMove(context, edge[0], edge[1], context->NodeAt(cycle, otherEdgeIndex), context->NextNode(cycle, otherEdgeIndex));
+				if (move->GetGain() > 0)
+				{
+					movesQueue.push(move);
+				}
+
+				Move* moveReversed = new EdgeSwapMove(context, edge[1], edge[0], context->NodeAt(cycle, otherEdgeIndex), context->NextNode(cycle, otherEdgeIndex));
+				if (moveReversed->GetGain() > 0)
+				{
+					movesQueue.push(moveReversed);
+				}
+			}
+		}
+		
+
+		while (!movesToRestore.empty())
+		{
+			movesQueue.push(movesToRestore.front());
+			movesToRestore.pop_front();
+		}
+
+	}
+	
+
+	return GetResult();
 }
 
 void CachedSteepestLocalSearch::ConstructInitialMoves()
 {
-	CyclesContext* context = new CyclesContext(instance, cycles);
-
-	// INTERNAL NODE MOVES
-	for (int cycle = 0; cycle < cycles.size(); ++cycle) 
-	{
-		for (int nodeAIndex = 0; nodeAIndex < cycles[cycle].size(); ++nodeAIndex)
-		{
-			for (int nodeBIndex = nodeAIndex + 1; nodeBIndex < cycles[cycle].size(); ++nodeBIndex)
-			{
-				movesQueue.push(new NodeSwapMove(context, cycle, nodeAIndex, cycle, nodeBIndex));
-			}
-		}
-	}
+	CyclesContext* context = new CyclesContext(instance, cycles, indexOfNode);
 
 	// EXTERNAL NODE MOVES
 	for (int cycleA = 0; cycleA < cycles.size(); ++cycleA)
@@ -40,7 +116,12 @@ void CachedSteepestLocalSearch::ConstructInitialMoves()
 			{
 				for (int nodeBIndex = 0; nodeBIndex < cycles[cycleB].size(); ++nodeBIndex)
 				{
-					movesQueue.push(new NodeSwapMove(context, cycleA, nodeAIndex, cycleB, nodeBIndex));
+					Move* move = new NodeSwapMove(context, cycleA, nodeAIndex, cycleB, nodeBIndex);
+					if (move->GetGain() > 0)
+					{
+						movesQueue.push(move);
+					}
+					
 				}
 			}
 		}
@@ -53,10 +134,18 @@ void CachedSteepestLocalSearch::ConstructInitialMoves()
 		{
 			for (int edgeBIndex = edgeAIndex + 1; edgeBIndex < cycles[cycle].size(); ++edgeBIndex)
 			{
-				movesQueue.push(new EdgeSwapMove(context, cycle, edgeAIndex, edgeBIndex));
+				Move* move = new EdgeSwapMove(context, context->NodeAt(cycle, edgeAIndex), context->NextNode(cycle, edgeAIndex), context->NodeAt(cycle, edgeBIndex), context->NextNode(cycle, edgeBIndex));
+				if (move->GetGain() > 0)
+				{
+					movesQueue.push(move);
+				}
+
+				Move* moveReversed = new EdgeSwapMove(context, context->NextNode(cycle, edgeAIndex), context->NodeAt(cycle, edgeAIndex), context->NodeAt(cycle, edgeBIndex), context->NextNode(cycle, edgeBIndex));
+				if (moveReversed->GetGain() > 0)
+				{
+					movesQueue.push(moveReversed);
+				}
 			}
 		}
 	}
-
-	// TODO: swap for inversed edges
 }

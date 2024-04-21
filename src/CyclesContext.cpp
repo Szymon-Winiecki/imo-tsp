@@ -2,9 +2,11 @@
 
 #include <algorithm>
 
-CyclesContext::CyclesContext(Instance* intance, std::vector<std::vector<int>>& cycles, std::vector<std::array<int, 2>>& indexOfNode)
+CyclesContext::CyclesContext(Instance* instance, std::vector<std::vector<int>>& cycles, std::vector<std::array<int, 2>>& indexOfNode)
 	: instance{ instance }, cycles{ cycles }, indexOfNode{ indexOfNode }
-{}
+{
+	
+}
 
 int CyclesContext::NodeAt(int cycle, int nodeIndex) const
 {
@@ -132,9 +134,12 @@ void CyclesContext::EdgeSwap(int cycle, int edgeAIndex, int edgeBIndex)
 		std::swap(edgeAIndex, edgeBIndex);
 	}
 
-	for (int i = edgeAIndex + 1, int j = edgeBIndex; i < j; ++i, --j)
+
+	int i = edgeAIndex + 1;
+	int j = edgeBIndex;
+	while (i < j)
 	{
-		std::swap(indexOfNode[cycles[cycle][i]], indexOfNode[cycles[cycle][j]]);
+		std::swap(indexOfNode[cycles[cycle][i++]], indexOfNode[cycles[cycle][j--]]);
 	}
 
 	std::reverse(cycles[cycle].begin() + edgeAIndex + 1, cycles[cycle].begin() + edgeBIndex + 1);
@@ -148,10 +153,7 @@ void CyclesContext::EdgeSwap(int edgeAStart, int edgeBStart)
 void CyclesContext::NodeSwap(int cycleA, int nodeAIndex, int cycleB, int nodeBIndex)
 {
 	std::swap(indexOfNode[cycles[cycleA][nodeAIndex]], indexOfNode[cycles[cycleB][nodeBIndex]]);
-
-	int nodeA = cycles[cycleA][nodeAIndex];
-	cycles[cycleA][nodeAIndex] = cycles[cycleB][nodeBIndex];
-	cycles[cycleB][nodeBIndex] = nodeA;
+	std::swap(cycles[cycleA][nodeAIndex], cycles[cycleB][nodeBIndex]);
 }
 
 void CyclesContext::NodeSwap(int nodeA, int nodeB)

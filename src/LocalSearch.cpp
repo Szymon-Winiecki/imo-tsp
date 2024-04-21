@@ -121,3 +121,25 @@ void LocalSearch::ExternalNodeSwap(int cycleA, int nodeAIndex, int cycleB, int n
 	cycles[cycleA][nodeAIndex] = cycles[cycleB][nodeBIndex];
 	cycles[cycleB][nodeBIndex] = nodeA;
 }
+
+Result* LocalSearch::GetResult() const
+{
+	Result* result = new Result(instance, cycles.size());
+
+	for (int i = 0; i < cycles.size(); ++i)
+	{
+		int lastNode = -1;
+
+		for (auto node : cycles[i])
+		{
+			if (lastNode != -1)
+			{
+				result->AddEdge(i, lastNode, node);
+			}
+			lastNode = node;
+		}
+		result->AddEdge(i, lastNode, cycles[i].front());
+	}
+
+	return result;
+}

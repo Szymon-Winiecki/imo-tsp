@@ -6,7 +6,7 @@
 class CyclesContext
 {
 public:
-	CyclesContext(Instance* intance, std::vector<std::vector<int>>& cycles, std::vector<std::array<int, 2>>& indexOfNode);
+	CyclesContext(Instance* instance, std::vector<std::vector<int>>& cycles, std::vector<std::array<int, 2>>& indexOfNode);
 
 	int NodeAt(int cycle, int nodeIndex) const;
 	int NodeCycle(int node) const;
@@ -59,6 +59,7 @@ public:
 
 	void NodeSwap(int cycleA, int nodeAIndex, int cycleB, int nodeBIndex);
 	void NodeSwap(int nodeA, int nodeB);
+
 private:
 	Instance* instance;
 	std::vector<std::vector<int>>& cycles;

@@ -39,6 +39,8 @@ protected:
 	void InternalEdgeSwap(int cycle, int edgeAIndex, int edgeBIndex);
 	void ExternalNodeSwap(int cycleA, int nodeAIndex, int cycleB, int nodeBIndex);
 
+	Result* GetResult() const;
+
 	std::vector<std::vector<int>> cycles;
 	Instance* instance;
 	int NodeEdgeInternal;

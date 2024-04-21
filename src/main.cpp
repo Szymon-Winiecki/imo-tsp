@@ -18,6 +18,7 @@
 #include "../include/GreedyLocalSearch.h"
 #include "../include/SteepestLocalSearch.h"
 #include "../include/RandomWalk.h"
+#include "../include/CachedSteepestLocalSearch.h"
 
 namespace fs = std::filesystem;
 
@@ -35,7 +36,7 @@ int main() {
     result1->ListToVectors();
 
 
-    RandomWalk a = RandomWalk(result1->GetCycles(), &instance, 200);
+    CachedSteepestLocalSearch a = CachedSteepestLocalSearch(result1->GetCycles(), &instance);
     Result* r = a.Solve();
     std::cout << "po: " << r->getRouteLength() << std::endl;
 
