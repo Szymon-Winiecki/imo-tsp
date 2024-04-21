@@ -7,13 +7,15 @@
 class EdgeSwapMove : public Move
 {
 public:
-	EdgeSwapMove(CyclesContext* context, int cycle, int edgeAIndex, int edgeBIndex);
+	EdgeSwapMove(CyclesContext* context, int edgeAStart, int edgeAEnd, int edgeBStart, int edgeBEnd);
 
 	bool IsApplicable() const;
+	bool ShouldRemove() const;
 	int Apply();
-protected:
-	int cycle, edgeAIndex, edgeBIndex;
+	std::vector<int> GetAffectedNodes();
+	std::vector < std::array<int, 2>> GetNewEdges();
 
-	std::array<int, 2> edgeA;	// nodeA neighbourhood (actuall names of nodes, not just indices), where nodeANeigh[1] is the nodeA itself
-	std::array<int, 3> edgeB;
+protected:
+	std::array<int, 2> edgeA;
+	std::array<int, 2> edgeB;
 };

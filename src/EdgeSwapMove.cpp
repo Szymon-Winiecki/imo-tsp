@@ -2,45 +2,48 @@
 
 #include "../include/CyclesContext.h"
 
-EdgeSwapMove::EdgeSwapMove(CyclesContext* context, int cycle, int edgeAIndex, int edgeBIndex)
-	: Move(context),
-	cycle{ cycle },
-	edgeAIndex{ edgeAIndex },
-	edgeBIndex{ edgeBIndex }
+EdgeSwapMove::EdgeSwapMove(CyclesContext* context, int edgeAStart, int edgeAEnd, int edgeBStart, int edgeBEnd)
+	: Move(context)
 {
-	if (this->edgeAIndex > this->edgeBIndex)
-	{
-		std::swap(this->edgeAIndex, this->edgeBIndex);
-	}
+	gain = context->EdgeSwapGain(edgeAStart, edgeAEnd, edgeBStart, edgeBEnd);
 
-	gain = context->EdgeSwapGain(this->cycle, this->edgeAIndex, this->edgeBIndex);
+	edgeA[0] = edgeAStart;
+	edgeA[1] = edgeAEnd;
 
-	edgeA[0] = context->NodeAt(this->cycle, this->edgeAIndex);
-	edgeA[1] = context->NextNodeIndex(this->cycle, this->edgeAIndex);
-
-	edgeB[0] = context->PrevNodeIndex(this->cycle, this->edgeBIndex);
-	edgeB[1] = context->NodeAt(this->cycle, this->edgeBIndex);
+	edgeB[0] = edgeBStart;
+	edgeB[1] = edgeBEnd;
 };
 
 bool EdgeSwapMove::IsApplicable() const
 {
-	if (
-		edgeA[0] == context->NodeAt(this->cycle, this->edgeAIndex) &&
-		edgeA[1] == context->NextNodeIndex(this->cycle, this->edgeAIndex) &&
-		edgeB[0] == context->PrevNodeIndex(this->cycle, this->edgeBIndex) &&
-		edgeB[1] == context->NodeAt(this->cycle, this->edgeBIndex)
-		)
-	{
-		return true;
-	}
-	else {
-		return false;
-	}
-	
+	return (context->IsEdge(edgeA[0], edgeA[1]) && context->IsEdge(edgeB[0], edgeB[1])) || (context->IsEdge(edgeA[1], edgeA[0]) && context->IsEdge(edgeB[1], edgeB[0]));
+}
+
+bool EdgeSwapMove::ShouldRemove() const
+{
+	return !(context->IsEdgeOrReversedEdge(edgeA[0], edgeA[1]) && context->IsEdgeOrReversedEdge(edgeB[0], edgeB[1]));
 }
 
 int EdgeSwapMove::Apply()
 {
-	context->EdgeSwap(cycle, edgeAIndex, edgeBIndex);
+	if (context->IsEdge(edgeA[0], edgeA[1]))
+	{
+		context->EdgeSwap(edgeA[0], edgeB[0]);
+	}
+	else
+	{
+		context->EdgeSwap(edgeA[1], edgeB[1]);
+	}
+	
 	return gain;
+}
+
+std::vector<int> EdgeSwapMove::GetAffectedNodes()
+{
+	return {edgeA[0], edgeA[1], edgeB[0], edgeB[1]};
+}
+
+std::vector<std::array<int, 2>> EdgeSwapMove::GetNewEdges()
+{
+	return { {edgeA[0], edgeB[0]}, {edgeA[1], edgeB[1]} };
 }
