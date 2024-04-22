@@ -23,9 +23,11 @@ public:
 
 	void save_results(const std::filesystem::path& path);
 
-	void add_result(int alg, int route, std::string algorithm, std::string dataset);
+	void add_result(int alg, int route, std::string algorithm, std::string dataset, std::string LocalSearchType, std::string internalChange, float duration);
 
 	void show_results();
+
+	void resizer(int exp);
 
 
 	/*
@@ -49,9 +51,15 @@ private:
 	std::pair<int, int> get_min(int alg);
 	std::pair<int, int> get_max(int alg);
 	int get_mean(int alg);
+	std::pair<int, int> get_min_time(int alg);
+	std::pair<int, int> get_max_time(int alg);
+	int get_mean_time(int alg);
 	std::vector<std::vector<unsigned int>> results;
-	std::vector<std::string> dataset;
-	std::vector<std::string> algorithm;
+	std::vector<std::vector<float>> times;
+	std::vector<std::vector<std::string>> dataset;
+	std::vector<std::vector<std::string>> algorithm;
+	std::vector<std::vector<std::string>> LocalSearchType;
+	std::vector<std::vector<std::string>> internalChange;
 //protected:
 
 	//int RandomInt(int min, int max) const;

@@ -17,34 +17,39 @@
 #include "../include/LocalSearch.h"
 #include "../include/GreedyLocalSearch.h"
 #include "../include/SteepestLocalSearch.h"
-#include "../include/RandomWalk.h"
-#include "../include/CachedSteepestLocalSearch.h"
 
 namespace fs = std::filesystem;
 
 int main() {
-
+    
+    
     fs::path relativeProjectRootDir("../../../");
-    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "kroA100.tsp");
+    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "test.tsp");
     TSPReader reader = TSPReader();
     Instance instance = reader.Read(absoluteDataPath);
+
+    //std::vector<std::vector<int>> cycles = { { 0, 1 , 6, 7 }, { 2, 3, 4, 5 } };
+     
+    instance.Nearest(3);
 
     RandomSolver solver4 = RandomSolver(&instance);
     Result* result1 = solver4.Solve(2);
 
-    std::cout <<"przed: " << result1->getRouteLength() <<std::endl;
+    //LocalSearch GreedyLocalSearch(cycles, &instance);
+
+    //Result* r = GreedyLocalSearch.Solve();
+
     result1->ListToVectors();
 
 
-    CachedSteepestLocalSearch a = CachedSteepestLocalSearch(result1->GetCycles(), &instance);
+    CandidatSearch a = CandidatSearch(result1->GetCycles(), &instance, 1);
+    
     Result* r = a.Solve();
-    std::cout << "po: " << r->getRouteLength() << std::endl;
+
 
     //GreedyLocalSearch b = GreedyLocalSearch(result1->GetCycles(), &instance, 1);
     //Result* r2 = b.Solve();
     //std::cout << "ppo" << r2->getRouteLength() << std::endl;
-
-
 
 
     fs::path ResultExportPath = fs::absolute(relativeProjectRootDir / "results" / "test_export.json");
@@ -57,24 +62,26 @@ int main() {
     system(std::format("python {} {} {}", visualizerScriptPath.string(), ResultExportPath.string(), plotPath.string()).c_str());
 
 
-    return 0;
-    /*
-
+    return 0;/*
+    srand(time(NULL));
     fs::path relativeProjectRootDir("../../../");
-    const int experiments = 1;
+    const int experiments = 100;
     const int algorithms = 4;
     // -1 if all algorithms, if one choose which
-    const int alg_num = 3;
+    const int alg_num = -1;
+    const int localSearch = 3;
+    const int InternalType = 2;
     int d = 0;
     
 
     std::string algorithms_names[4] = { "NearestNeighbor", "Regret", "GreedyCycle","Random"};
-    std::string datasets[2] = { "kroA100", "kroB100"};
-    
+    std::string datasets[2] = { "kroA200", "kroB200"};
+    std::string localSearchTypes[3] = { "Steepest", "Greedy", "RandomWalk"};
+    std::string InternalTypes[2] = { "Node", "Edge" };
 
     // read file with the input data
+    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "kroA200.tsp");
     //fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "test.tsp");
-    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "test.tsp");
     TSPReader reader = TSPReader();
     Instance instance = reader.Read(absoluteDataPath);
     Experiment experiment = Experiment(algorithms);
@@ -83,57 +90,108 @@ int main() {
     if (!fs::is_directory(relativeProjectRootDir / "results") || !fs::exists(relativeProjectRootDir / "results")) {
         fs::create_directory(relativeProjectRootDir / "results");
     }
-
+    experiment.resizer(100);
     // run solver
     NearestNeighborSolver solver1 = NearestNeighborSolver(&instance);
     RegretSolver solver2 = RegretSolver(&instance);
     GreedyCycleSolver solver3 = GreedyCycleSolver(&instance);
-    RandomSolver solver4 = RandomSolver(&instance);
+    int s = rand() % 10000;
+    RandomSolver solver4 = RandomSolver(&instance, s);
 
     int length = 0;
+    int type = 0;
+    float time = 0;
+    /*
+    for (int i = 0; i < 100; i++)
+    {
+        std::string json_output = std::to_string(i) + "_" + algorithms_names[0] + "_" + datasets[d] + "_" + "_" + "_e.json";
+        fs::path exportPath = fs::absolute(relativeProjectRootDir / "results" / json_output);
+        auto start = std::chrono::steady_clock::now();
+        Result* result;
+        result = solver3.Solve(2);
+        length = result->getRouteLength();
+        
+        auto end = std::chrono::steady_clock::now();
+        auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+        std::cout << algorithms_names[0] << " " << 0 << " " << 0 << " " << 0 << " " << length << " Czas" << duration.count() << std::endl;
+        time = duration.count() / 10000;
+        experiment.add_result(type, length, algorithms_names[0], datasets[d], "", "", time);
+        result->ExportAsJSON(exportPath);
+    }*/
     
+    /*
     for (int j = 0; j < algorithms; j++)
     {
-        if(alg_num != -1)
+        if (j != 0) continue;
+        //j: NearestNeighbor - 0, Regret - 1, GreedyCycle - 2, Random - 3
+        for (int k = 0; k < InternalType; k++)
         {
-            if (j != alg_num)
+            if (k != 1) continue;
+
+            //k: node - 0 , edge - 1
+            for (int i = 0; i < experiments; i++)
             {
-				continue;
-			}
-	    }
-    for (int i = 0; i < experiments; i++)
-    {
-        std::string json_output = std::to_string(i) + "_" + algorithms_names[j] + "_" + datasets[d] + "_e.json";
-        fs::path exportPath = fs::absolute(relativeProjectRootDir / "results" / json_output);
-        if (j == 0)
-        {
-            Result* result1 = solver1.Solve(2);
-            length = result1->getRouteLength();
-            result1->ExportAsJSON(exportPath);
-        }
-        else if (j == 1)
-        {
-            Result* result2 = solver2.Solve(2);
-            length = result2->getRouteLength();
-            result2->ExportAsJSON(exportPath);
-        }
-        else if (j == 2)
-        {
-            Result* result3 = solver3.Solve(2);
-            length = result3->getRouteLength();
-            result3->ExportAsJSON(exportPath);
-        }
-        else if (j == 3)
-        {
-            Result* result4 = solver4.Solve(2);
-            length = result4->getRouteLength();
-            result4->ExportAsJSON(exportPath);
-        }
+                Result* result;
+                if (j == 0)
+                {
+                    result = solver1.Solve(2);
+                }
+                else if (j == 1)
+                {
+                    result = solver2.Solve(2);
+                }
+                else if (j == 2)
+                {
+                    result = solver3.Solve(2);
+                }
+                else if (j == 3)
+                {
+                    s++;
+                    RandomSolver solver4 = RandomSolver(&instance, s);
+                    result = solver4.Solve(2);
+                }
 
-        experiment.add_result(j, length, algorithms_names[j], datasets[d]);
+                result->ListToVectors();
+                for (int ls = 0; ls < localSearch; ls++)
+                {
+                    if (ls != 0) continue;
+                    //ls: Steepest - 0, Greedy - 1, RandomWalk - 2
+                    auto start = std::chrono::steady_clock::now();
+                    // eksperyment_nazwaAlgorytmu_nazwaDatasetu_typWyszukiwaniaLokalnego_TypWewnetrznejZamiany_e.json
+                    std::string json_output = std::to_string(i) + "_" + algorithms_names[j] + "_" + datasets[d] + "_" + localSearchTypes[ls] + "_" + InternalTypes[k] + "_e.json";
+                    fs::path exportPath = fs::absolute(relativeProjectRootDir / "results" / json_output);
+                    if (ls == 0)
+                    {
+                        SteepestLocalSearch a = SteepestLocalSearch(result->GetCycles(), &instance, k);
+                        Result* r = a.Solve();
+                        length = r->getRouteLength();
+                        r->ExportAsJSON(exportPath);
+                    }
+                    if (ls == 1)
+                    {
+                        s++;
+                        GreedyLocalSearch a = GreedyLocalSearch(result->GetCycles(), &instance, k, s);
+                        Result* r = a.Solve();
+                        length = r->getRouteLength();
+                        r->ExportAsJSON(exportPath);
+                    }
+                    if (ls == 2)
+                    {
+                    	RandomWalk a = RandomWalk(result->GetCycles(), &instance, 0.0427);
+                        
+						Result* r = a.Solve();
+						length = r->getRouteLength();
+						r->ExportAsJSON(exportPath);
+                    }
 
-
-    }
+                    auto end = std::chrono::steady_clock::now();
+                    auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
+                    std::cout << algorithms_names[j] << " " << datasets[d] << " " << localSearchTypes[ls] << " " << InternalTypes[k] << " " << length << " Czas" << duration.count() << std::endl;
+                    time = duration.count() / 10000;
+                    experiment.add_result(0, length, algorithms_names[j], datasets[d], localSearchTypes[ls], InternalTypes[k], time);
+                }
+            }
+        }
     }
 
 
