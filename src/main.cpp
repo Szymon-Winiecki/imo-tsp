@@ -17,12 +17,14 @@
 #include "../include/LocalSearch.h"
 #include "../include/GreedyLocalSearch.h"
 #include "../include/SteepestLocalSearch.h"
+#include "../include/CachedSteepestLocalSearch.h"
+#include "../include/RandomWalk.h"
 
 namespace fs = std::filesystem;
 
 int main() {
     
-    
+    /*
     fs::path relativeProjectRootDir("../../../");
     fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "test.tsp");
     TSPReader reader = TSPReader();
@@ -61,26 +63,27 @@ int main() {
     fs::path visualizerScriptPath = fs::absolute(relativeProjectRootDir / "visualization" / "visualize_single.py");
     system(std::format("python {} {} {}", visualizerScriptPath.string(), ResultExportPath.string(), plotPath.string()).c_str());
 
+    */
 
-    return 0;/*
+
     srand(time(NULL));
     fs::path relativeProjectRootDir("../../../");
     const int experiments = 100;
     const int algorithms = 4;
     // -1 if all algorithms, if one choose which
     const int alg_num = -1;
-    const int localSearch = 3;
+    const int localSearch = 4;
     const int InternalType = 2;
     int d = 0;
     
 
-    std::string algorithms_names[4] = { "NearestNeighbor", "Regret", "GreedyCycle","Random"};
+    std::string algorithms_names[4] = { "NearestNeighbor", "Regret", "GreedyCycle", "Random"};
     std::string datasets[2] = { "kroA200", "kroB200"};
-    std::string localSearchTypes[3] = { "Steepest", "Greedy", "RandomWalk"};
+    std::string localSearchTypes[4] = { "Steepest", "Greedy", "RandomWalk", "CachedSteepest"};
     std::string InternalTypes[2] = { "Node", "Edge" };
 
     // read file with the input data
-    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "kroA200.tsp");
+    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "kroB200.tsp");
     //fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "test.tsp");
     TSPReader reader = TSPReader();
     Instance instance = reader.Read(absoluteDataPath);
@@ -101,8 +104,8 @@ int main() {
     int length = 0;
     int type = 0;
     float time = 0;
-    /*
-    for (int i = 0; i < 100; i++)
+    
+    /*for (int i = 0; i < 100; i++)
     {
         std::string json_output = std::to_string(i) + "_" + algorithms_names[0] + "_" + datasets[d] + "_" + "_" + "_e.json";
         fs::path exportPath = fs::absolute(relativeProjectRootDir / "results" / json_output);
@@ -119,10 +122,10 @@ int main() {
         result->ExportAsJSON(exportPath);
     }*/
     
-    /*
+    
     for (int j = 0; j < algorithms; j++)
     {
-        if (j != 0) continue;
+        if (j != 3) continue;
         //j: NearestNeighbor - 0, Regret - 1, GreedyCycle - 2, Random - 3
         for (int k = 0; k < InternalType; k++)
         {
@@ -154,8 +157,8 @@ int main() {
                 result->ListToVectors();
                 for (int ls = 0; ls < localSearch; ls++)
                 {
-                    if (ls != 0) continue;
-                    //ls: Steepest - 0, Greedy - 1, RandomWalk - 2
+                    if (ls != 3) continue;
+                    //ls: Steepest - 0, Greedy - 1, RandomWalk - 2, CachedSteepest - 3
                     auto start = std::chrono::steady_clock::now();
                     // eksperyment_nazwaAlgorytmu_nazwaDatasetu_typWyszukiwaniaLokalnego_TypWewnetrznejZamiany_e.json
                     std::string json_output = std::to_string(i) + "_" + algorithms_names[j] + "_" + datasets[d] + "_" + localSearchTypes[ls] + "_" + InternalTypes[k] + "_e.json";
@@ -183,6 +186,14 @@ int main() {
 						length = r->getRouteLength();
 						r->ExportAsJSON(exportPath);
                     }
+                    if (ls == 3)
+                    {
+                        CachedSteepestLocalSearch a = CachedSteepestLocalSearch(result->GetCycles(), &instance);
+
+                        Result* r = a.Solve();
+                        length = r->getRouteLength();
+                        r->ExportAsJSON(exportPath);
+                    }
 
                     auto end = std::chrono::steady_clock::now();
                     auto duration = std::chrono::duration_cast<std::chrono::nanoseconds>(end - start);
@@ -207,5 +218,5 @@ int main() {
     fs::path visualizerScriptPath = fs::absolute(relativeProjectRootDir / "visualization" / "visualize.py");
     system(std::format("python {} {}", visualizerScriptPath.string(), ResultExportPath.string()).c_str());
     
-    return 0;*/
+    return 0;
 }
