@@ -4,11 +4,12 @@ class CyclesContext;
 
 #include <vector>
 #include <array>
+#include <memory>
 
 class Move
 {
 public:
-	Move(CyclesContext* context);
+	Move(std::shared_ptr<CyclesContext> context);
 	int GetGain() const;
 	virtual bool IsApplicable() const = 0;
 	virtual bool ShouldRemove() const = 0;
@@ -19,6 +20,6 @@ public:
 	bool operator <(Move const& rhs);
 
 protected:
-	CyclesContext* context;
+	std::shared_ptr<CyclesContext> context;
 	int gain;
 };

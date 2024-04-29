@@ -3,11 +3,12 @@
 #include "Move.h"
 
 #include <array>
+#include <memory>
 
 class EdgeSwapMove : public Move
 {
 public:
-	EdgeSwapMove(CyclesContext* context, int edgeAStart, int edgeAEnd, int edgeBStart, int edgeBEnd);
+	EdgeSwapMove(std::shared_ptr<CyclesContext> context, int edgeAStart, int edgeAEnd, int edgeBStart, int edgeBEnd);
 
 	bool IsApplicable() const;
 	bool ShouldRemove() const;

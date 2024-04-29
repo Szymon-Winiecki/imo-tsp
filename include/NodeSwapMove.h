@@ -3,11 +3,12 @@
 #include "Move.h"
 
 #include <array>
+#include <memory>
 
 class NodeSwapMove : public Move
 {
 public:
-	NodeSwapMove(CyclesContext* context, int cycleA, int nodeAIndex, int cycleB, int nodeBIndex);
+	NodeSwapMove(std::shared_ptr<CyclesContext> context, int cycleA, int nodeAIndex, int cycleB, int nodeBIndex);
 
 	bool IsApplicable() const;
 	bool ShouldRemove() const;

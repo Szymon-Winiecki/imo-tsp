@@ -74,7 +74,7 @@ int main() {
     const int alg_num = -1;
     const int localSearch = 4;
     const int InternalType = 2;
-    int d = 0;
+    int d = 1;
     
 
     std::string algorithms_names[4] = { "NearestNeighbor", "Regret", "GreedyCycle", "Random"};

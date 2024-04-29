@@ -4,7 +4,7 @@
 
 class MoveComparator {
 public:
-	bool operator()(Move* a, Move* b) {
+	bool operator()(std::shared_ptr<Move> a, std::shared_ptr<Move> b) {
 		if (a->GetGain() < b->GetGain()) {
 			return true;
 		}

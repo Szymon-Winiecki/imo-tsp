@@ -10,34 +10,39 @@
 
 Result* CachedSteepestLocalSearch::Solve()
 {
-	CyclesContext* context = new CyclesContext(instance, cycles, indexOfNode);
+	std::shared_ptr<CyclesContext> context = std::make_shared<CyclesContext>(instance, cycles, indexOfNode);
 
 	ConstructInitialMoves();
 
 
 	while (!movesQueue.empty())
 	{
-		std::forward_list<Move*> movesToRestore;
-		Move* nextMove;
+		std::forward_list<std::shared_ptr<Move>> movesToRestore;
+		std::shared_ptr<Move> nextMove = nullptr;
 
 		do
 		{
 			nextMove = movesQueue.top();
 			movesQueue.pop();
 
-			if (!(nextMove->ShouldRemove()) && !(nextMove->IsApplicable()))
+			if (nextMove->IsApplicable())
+			{
+				break;
+			}
+			else if (!(nextMove->ShouldRemove()))
 			{
 				movesToRestore.push_front(nextMove);
 			}
 
 			
-		} while (!(nextMove->IsApplicable()) && !movesQueue.empty());
+		} while (!movesQueue.empty());
 
-		if (nextMove->IsApplicable())
+		if (nextMove != nullptr && nextMove->IsApplicable())
 		{
 			nextMove->Apply();
 		}
-		else {
+		else 
+		{
 			break;
 		}
 
@@ -55,7 +60,7 @@ Result* CachedSteepestLocalSearch::Solve()
 
 				for (int otherNodeIndex = 0; otherNodeIndex < cycles[otherCycle].size(); ++otherNodeIndex)
 				{
-					Move* move = new NodeSwapMove(context, cycle, nodeIndex, otherCycle, otherNodeIndex);
+					std::shared_ptr<Move> move = std::make_shared<NodeSwapMove>(context, cycle, nodeIndex, otherCycle, otherNodeIndex);
 					if (move->GetGain() > 0)
 					{
 						movesQueue.push(move);
@@ -76,13 +81,13 @@ Result* CachedSteepestLocalSearch::Solve()
 					continue;
 				}
 
-				Move* move = new EdgeSwapMove(context, edge[0], edge[1], context->NodeAt(cycle, otherEdgeIndex), context->NextNode(cycle, otherEdgeIndex));
+				std::shared_ptr<Move> move = std::make_shared<EdgeSwapMove>(context, edge[0], edge[1], context->NodeAt(cycle, otherEdgeIndex), context->NextNode(cycle, otherEdgeIndex));
 				if (move->GetGain() > 0)
 				{
 					movesQueue.push(move);
 				}
 
-				Move* moveReversed = new EdgeSwapMove(context, edge[1], edge[0], context->NodeAt(cycle, otherEdgeIndex), context->NextNode(cycle, otherEdgeIndex));
+				std::shared_ptr<Move> moveReversed = std::make_shared<EdgeSwapMove>(context, edge[1], edge[0], context->NodeAt(cycle, otherEdgeIndex), context->NextNode(cycle, otherEdgeIndex));
 				if (moveReversed->GetGain() > 0)
 				{
 					movesQueue.push(moveReversed);
@@ -98,14 +103,13 @@ Result* CachedSteepestLocalSearch::Solve()
 		}
 
 	}
-	
 
 	return GetResult();
 }
 
 void CachedSteepestLocalSearch::ConstructInitialMoves()
 {
-	CyclesContext* context = new CyclesContext(instance, cycles, indexOfNode);
+	std::shared_ptr<CyclesContext> context = std::make_shared<CyclesContext>(instance, cycles, indexOfNode);
 
 	// EXTERNAL NODE MOVES
 	for (int cycleA = 0; cycleA < cycles.size(); ++cycleA)
@@ -116,7 +120,7 @@ void CachedSteepestLocalSearch::ConstructInitialMoves()
 			{
 				for (int nodeBIndex = 0; nodeBIndex < cycles[cycleB].size(); ++nodeBIndex)
 				{
-					Move* move = new NodeSwapMove(context, cycleA, nodeAIndex, cycleB, nodeBIndex);
+					std::shared_ptr<Move> move = std::make_shared<NodeSwapMove>(context, cycleA, nodeAIndex, cycleB, nodeBIndex);
 					if (move->GetGain() > 0)
 					{
 						movesQueue.push(move);
@@ -134,13 +138,13 @@ void CachedSteepestLocalSearch::ConstructInitialMoves()
 		{
 			for (int edgeBIndex = edgeAIndex + 1; edgeBIndex < cycles[cycle].size(); ++edgeBIndex)
 			{
-				Move* move = new EdgeSwapMove(context, context->NodeAt(cycle, edgeAIndex), context->NextNode(cycle, edgeAIndex), context->NodeAt(cycle, edgeBIndex), context->NextNode(cycle, edgeBIndex));
+				std::shared_ptr<Move> move = std::make_shared<EdgeSwapMove>(context, context->NodeAt(cycle, edgeAIndex), context->NextNode(cycle, edgeAIndex), context->NodeAt(cycle, edgeBIndex), context->NextNode(cycle, edgeBIndex));
 				if (move->GetGain() > 0)
 				{
 					movesQueue.push(move);
 				}
 
-				Move* moveReversed = new EdgeSwapMove(context, context->NextNode(cycle, edgeAIndex), context->NodeAt(cycle, edgeAIndex), context->NodeAt(cycle, edgeBIndex), context->NextNode(cycle, edgeBIndex));
+				std::shared_ptr<Move> moveReversed = std::make_shared<EdgeSwapMove>(context, context->NextNode(cycle, edgeAIndex), context->NodeAt(cycle, edgeAIndex), context->NodeAt(cycle, edgeBIndex), context->NextNode(cycle, edgeBIndex));
 				if (moveReversed->GetGain() > 0)
 				{
 					movesQueue.push(moveReversed);

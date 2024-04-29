@@ -1,6 +1,6 @@
 #include "../include/Move.h"
 
-Move::Move(CyclesContext* context)
+Move::Move(std::shared_ptr<CyclesContext> context)
 	:context{ context } 
 {}
 

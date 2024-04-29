@@ -2,7 +2,7 @@
 
 #include "../include/CyclesContext.h"
 
-NodeSwapMove::NodeSwapMove(CyclesContext* context, int cycleA, int nodeAIndex, int cycleB, int nodeBIndex)
+NodeSwapMove::NodeSwapMove(std::shared_ptr<CyclesContext> context, int cycleA, int nodeAIndex, int cycleB, int nodeBIndex)
 	: Move(context)
 {
 	nodeA = context->NodeAt(cycleA, nodeAIndex);

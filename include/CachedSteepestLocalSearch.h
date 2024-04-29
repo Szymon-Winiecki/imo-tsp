@@ -5,6 +5,7 @@
 #include <list>
 #include <queue>
 #include <array>
+#include <memory>
 
 #include "LocalSearch.h"
 #include "Instance.h"
@@ -37,7 +38,7 @@ public:
 
 protected:
 	void ConstructInitialMoves();
-	std::priority_queue<Move*, std::vector<Move*>, MoveComparator> movesQueue;
+	std::priority_queue<std::shared_ptr<Move>, std::vector<std::shared_ptr<Move>>, MoveComparator> movesQueue;
 
 	/*
 	* At indexOfNode[n] there is an 2-element array {cycle, index} that indicates cycle in which node n is and its index in that cycle
