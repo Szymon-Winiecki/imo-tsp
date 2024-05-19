@@ -22,6 +22,7 @@
 #include "../include/IteratedLocalSearch.h"
 #include "../include/RandomPerturbator.h"
 #include "../include/DestroyRepairPerturbator.h"
+#include "../include/LargeScaleNeighborhoodSearch.h"
 
 #define NODE_SWAP 0
 #define EDGE_SWAP 1
@@ -41,14 +42,15 @@ int main() {
     RandomSolver randomSolver = RandomSolver(&instance);
     Result* randomResult = randomSolver.Solve(2);
 
-    //LocalSearch GreedyLocalSearch(cycles, &instance);
+    SteepestLocalSearch localSearch = SteepestLocalSearch(randomResult->GetCycles(), &instance, EDGE_SWAP);
 
-    //Result* r = GreedyLocalSearch.Solve();
+    Result* localSearchResult = localSearch.Solve();
 
     //RandomPerturbator* perturbator = new RandomPerturbator(10);
     Solver* repairSolver = new NearestNeighborSolver(&instance);
     DestroyRepairPerturbator* perturbator = new DestroyRepairPerturbator(60, repairSolver);
-    IteratedLocalSearch<SteepestLocalSearch, int> localSeach = IteratedLocalSearch<SteepestLocalSearch, int>(randomResult->GetCycles(), &instance, perturbator, 1000, EDGE_SWAP);
+    //IteratedLocalSearch<SteepestLocalSearch, int> localSeach = IteratedLocalSearch<SteepestLocalSearch, int>(randomResult->GetCycles(), &instance, perturbator, 2000, EDGE_SWAP);
+	LargeScaleNeighborhoodSearch localSeach = LargeScaleNeighborhoodSearch(localSearchResult->GetCycles(), &instance, perturbator, 2000);
     
     Result* finalResult = localSeach.Solve();
 	std::cout << "Final result: " << finalResult->getRouteLength() << std::endl;
