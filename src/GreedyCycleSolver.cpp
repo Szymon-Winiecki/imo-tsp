@@ -5,6 +5,7 @@
 #include <utility>
 #include <limits>
 #include <iterator>
+#include <stdexcept>
 
 #include "../include/Result.h"
 #include "../include/Instance.h"
@@ -71,6 +72,11 @@ Result* GreedyCycleSolver::Solve(int routesNumber)
 	}
 
 	return result;
+}
+
+void GreedyCycleSolver::Solve(std::vector<std::list<int>>& routes)
+{
+	throw std::runtime_error("Not implemented");
 }
 
 std::pair<int, int> GreedyCycleSolver::FindBestInsertion(const std::list<int>& route, const std::vector<bool>& nodeUsed) const

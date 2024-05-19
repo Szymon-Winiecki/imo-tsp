@@ -21,6 +21,7 @@
 #include "../include/RandomWalk.h"
 #include "../include/IteratedLocalSearch.h"
 #include "../include/RandomPerturbator.h"
+#include "../include/DestroyRepairPerturbator.h"
 
 #define NODE_SWAP 0
 #define EDGE_SWAP 1
@@ -44,7 +45,9 @@ int main() {
 
     //Result* r = GreedyLocalSearch.Solve();
 
-	RandomPerturbator* perturbator = new RandomPerturbator(10);
+    //RandomPerturbator* perturbator = new RandomPerturbator(10);
+    Solver* repairSolver = new NearestNeighborSolver(&instance);
+    DestroyRepairPerturbator* perturbator = new DestroyRepairPerturbator(60, repairSolver);
     IteratedLocalSearch<SteepestLocalSearch, int> localSeach = IteratedLocalSearch<SteepestLocalSearch, int>(randomResult->GetCycles(), &instance, perturbator, 1000, EDGE_SWAP);
     
     Result* finalResult = localSeach.Solve();

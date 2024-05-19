@@ -73,6 +73,43 @@ Result* NearestNeighborSolver::Solve(int routesNumber)
 	return result;
 }
 
+void NearestNeighborSolver::Solve(std::vector<std::list<int>>& routes)
+{
+	int nodesUsedNumber = 0;
+	std::vector<bool> nodesUsed(instance->Size(), false);	// if node of index x is already included in one of the paths nodesUsed[x] = true, otherwise nodesUsed[x] = false
+
+
+	for (int i = 0; i < routes.size(); ++i)
+	{
+		for (auto node : routes[i])
+		{
+			nodesUsed[node] = true;
+			++nodesUsedNumber;
+		}
+	}
+
+	// iterate over all contructed paths and add nodes until all nodes are used
+	int currentRoute = 0;
+	while (nodesUsedNumber < instance->Size())
+	{
+		// find which node and where should be inserted
+		std::pair<int, int> bestInsertion = FindBestInsertion(routes[currentRoute], nodesUsed);
+		int insertAfter = bestInsertion.first;
+		int insertNode = bestInsertion.second;
+
+		// insert node
+		auto insertIterator = std::next(routes[currentRoute].begin(), insertAfter + 1);
+		routes[currentRoute].insert(insertIterator, insertNode);
+		++nodesUsedNumber;
+		nodesUsed[insertNode] = true;
+
+		if (++currentRoute >= routes.size())
+		{
+			currentRoute = 0;
+		}
+	}
+}
+
 std::pair<int, int> NearestNeighborSolver::FindBestInsertion(const std::list<int>& route, const std::vector<bool>& nodeUsed) const
 {
 	int bestNode = 0;

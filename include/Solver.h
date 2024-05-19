@@ -3,6 +3,7 @@
 #include <cstdlib>
 #include <ctime>
 #include <vector>
+#include <list>
 
 class Instance;
 class Result;
@@ -10,23 +11,20 @@ class Result;
 class Solver 
 {
 public:
-	Solver(Instance* instance) : Solver(instance, (unsigned int) time(NULL)) {}
-
-	Solver(Instance* instance, unsigned int seed) : instance { instance } 
-	{
-		std::srand(seed);
-	}
+	Solver(Instance* instance) : instance { instance } { }
 
 	void SetInstance(Instance* instance) 
 	{
 		this->instance = instance;
 	}
 
-	Instance* GetInstance() const {
+	Instance* GetInstance() const 
+	{
 		return instance;
 	}
 
 	virtual Result* Solve(int routes = 2) = 0;
+	virtual void Solve(std::vector<std::list<int>>& routes) = 0;
 
 protected:
 

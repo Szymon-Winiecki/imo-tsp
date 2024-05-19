@@ -6,6 +6,7 @@
 #include <limits>
 #include <iterator>
 #include <iostream>
+#include <stdexcept>
 
 #include "../include/Result.h"
 #include "../include/Instance.h"
@@ -72,6 +73,11 @@ Result* RegretSolver::Solve(int routesNumber)
 	}
 
 	return result;
+}
+
+void RegretSolver::Solve(std::vector<std::list<int>>& routes)
+{
+	throw std::runtime_error("Not implemented");
 }
 
 std::pair<int, int> RegretSolver::FindBestInsertion(const std::list<int>& route, const std::vector<bool>& nodeUsed) const

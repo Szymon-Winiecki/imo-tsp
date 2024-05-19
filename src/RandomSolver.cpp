@@ -7,6 +7,7 @@
 #include <iterator>
 #include <iostream>
 #include <stdlib.h>  
+#include <stdexcept>
 
 #include "../include/Result.h"
 #include "../include/Instance.h"
@@ -74,6 +75,11 @@ Result* RandomSolver::Solve(int routesNumber)
 	}
 
 	return result;
+}
+
+void RandomSolver::Solve(std::vector<std::list<int>>& routes)
+{
+	throw std::runtime_error("Not implemented");
 }
 
 std::pair<int, int> RandomSolver::FindBestInsertion(const std::list<int>& route, const std::vector<bool>& nodeUsed, int nodesUsedNumber) const
