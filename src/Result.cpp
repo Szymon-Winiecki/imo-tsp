@@ -100,7 +100,7 @@ void Result::ExportAsJSON(const std::filesystem::path& path, bool pretty)
 int Result::getRouteLength()
 {
 	int length = 0;
-    std::cout << routes[0].size() + routes[1].size() << std::endl;
+    //std::cout << routes[0].size() + routes[1].size() << std::endl;
     for (int i = 0; i < routes.size(); ++i)
     {
         for (int j = 0; j < routes[i].size(); ++j)
@@ -123,5 +123,15 @@ void Result::ListToVectors()
 			//std::cout << routes[i][j][0] << " " << routes[i][j][1] << std::endl;
 		}
 	}
+}
+
+std::vector<std::vector<int>> Result::GetCycles()
+{
+	if (cycles.empty())
+    {
+		ListToVectors();
+	}
+
+	return cycles;
 }
 

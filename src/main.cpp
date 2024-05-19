@@ -19,34 +19,31 @@
 #include "../include/SteepestLocalSearch.h"
 #include "../include/CachedSteepestLocalSearch.h"
 #include "../include/RandomWalk.h"
+#include "../include/IteratedLocalSearch.h"
+#include "../include/RandomPerturbator.h"
 
 namespace fs = std::filesystem;
 
 int main() {
-    
-    /*
     fs::path relativeProjectRootDir("../../../");
-    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "test.tsp");
+    fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "kroA200.tsp");
     TSPReader reader = TSPReader();
     Instance instance = reader.Read(absoluteDataPath);
 
     //std::vector<std::vector<int>> cycles = { { 0, 1 , 6, 7 }, { 2, 3, 4, 5 } };
-     
-    instance.Nearest(3);
+    
 
-    RandomSolver solver4 = RandomSolver(&instance);
-    Result* result1 = solver4.Solve(2);
+    RandomSolver randomSolver = RandomSolver(&instance);
+    Result* randomResult = randomSolver.Solve(2);
 
     //LocalSearch GreedyLocalSearch(cycles, &instance);
 
     //Result* r = GreedyLocalSearch.Solve();
 
-    result1->ListToVectors();
-
-
-    CandidatSearch a = CandidatSearch(result1->GetCycles(), &instance, 1);
+	RandomPerturbator* perturbator = new RandomPerturbator(5);
+    IteratedLocalSearch<SteepestLocalSearch> localSeach = IteratedLocalSearch<SteepestLocalSearch>(randomResult->GetCycles(), &instance, perturbator, 1000);
     
-    Result* r = a.Solve();
+    Result* finalResult = localSeach.Solve();
 
 
     //GreedyLocalSearch b = GreedyLocalSearch(result1->GetCycles(), &instance, 1);
@@ -57,15 +54,15 @@ int main() {
     fs::path ResultExportPath = fs::absolute(relativeProjectRootDir / "results" / "test_export.json");
     
 
-    r->ExportAsJSON(ResultExportPath);
+    finalResult->ExportAsJSON(ResultExportPath);
 
     fs::path plotPath = fs::absolute(relativeProjectRootDir / "results" / "test.png");
     fs::path visualizerScriptPath = fs::absolute(relativeProjectRootDir / "visualization" / "visualize_single.py");
     system(std::format("python {} {} {}", visualizerScriptPath.string(), ResultExportPath.string(), plotPath.string()).c_str());
 
-    */
 
-
+    return 0;
+    /*
     srand(time(NULL));
     fs::path relativeProjectRootDir("../../../");
     const int experiments = 100;
@@ -122,7 +119,7 @@ int main() {
         result->ExportAsJSON(exportPath);
     }*/
     
-    
+    /*
     for (int j = 0; j < algorithms; j++)
     {
         if (j != 3) continue;
@@ -219,4 +216,5 @@ int main() {
     system(std::format("python {} {}", visualizerScriptPath.string(), ResultExportPath.string()).c_str());
     
     return 0;
+    */
 }

@@ -38,6 +38,32 @@ Result* LocalSearch::Solve()
 	return result;
 }
 
+int LocalSearch::GetCurrentRouteLength() const
+{
+	int length = 0;
+	for (int i = 0; i < cycles.size(); ++i)
+	{
+		int lastNode = cycles[i].back();
+
+		for (auto node : cycles[i])
+		{
+			length += instance->Distance(lastNode, node);
+			lastNode = node;
+		}
+	}
+	return length;
+}
+
+std::vector<std::vector<int>>& LocalSearch::GetCycles()
+{
+	return cycles;
+}
+
+std::vector<std::vector<int>> LocalSearch::CopyCycles()
+{
+	return cycles;
+}
+
 int LocalSearch::NextNodeIndex(int cycle, int nodeIndex) const
 {
 	return nodeIndex < cycles[cycle].size() - 1 ? (nodeIndex + 1) : 0;

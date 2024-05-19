@@ -15,14 +15,14 @@ enum class MoveType
 class LocalSearch
 {
 public:
-	LocalSearch(std::vector<std::vector<int>> initialState, Instance* instance, int NodeEdgeInternal) : LocalSearch(initialState, instance, NodeEdgeInternal, (unsigned int)time(NULL)) {}
-
-	LocalSearch(std::vector<std::vector<int>> initialState, Instance* instance, int NodeEdgeInternal, unsigned int seed) : cycles{ initialState }, instance{ instance }, NodeEdgeInternal{ NodeEdgeInternal }
-	{
-		std::srand(seed);
-	}
+	LocalSearch(std::vector<std::vector<int>> initialState, Instance* instance) : cycles{ initialState }, instance{ instance }
+	{ }
 
 	Result* Solve();
+
+	int GetCurrentRouteLength() const;
+	std::vector<std::vector<int>>& GetCycles();
+	std::vector<std::vector<int>> CopyCycles();
 
 protected:
 
@@ -43,5 +43,4 @@ protected:
 
 	std::vector<std::vector<int>> cycles;
 	Instance* instance;
-	int NodeEdgeInternal;
 };

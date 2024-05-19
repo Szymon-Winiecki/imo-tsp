@@ -10,12 +10,12 @@ class Result;
 class Instance;
 
 
-class RandomWalk : LocalSearch
+class RandomWalk : public LocalSearch
 {
 public:
-	RandomWalk(std::vector<std::vector<int>> initialState, Instance* instance, uint64_t maxExecutionTime) : RandomWalk(initialState, instance, maxExecutionTime, (unsigned int)time(NULL)) {}
+	RandomWalk(std::vector<std::vector<int>> initialState, Instance* instance) : RandomWalk(initialState, instance, 100) {}
 
-	RandomWalk(std::vector<std::vector<int>> initialState, Instance* instance, uint64_t maxExecutionTime, unsigned int seed) : LocalSearch(initialState, instance, 0, seed), maxExecutionTime{ maxExecutionTime } {}
+	RandomWalk(std::vector<std::vector<int>> initialState, Instance* instance, uint64_t maxExecutionTime) : LocalSearch(initialState, instance), maxExecutionTime{ maxExecutionTime } {}
 
 	Result* Solve();
 

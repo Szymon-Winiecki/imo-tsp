@@ -10,15 +10,15 @@ class Result;
 class Instance;
 
 
-class SteepestLocalSearch : LocalSearch
+class SteepestLocalSearch : public LocalSearch
 {
 public:
-	SteepestLocalSearch(std::vector<std::vector<int>> initialState, Instance* instance, int NodeEdgeInternal) : LocalSearch(initialState, instance, NodeEdgeInternal, (unsigned int)time(NULL)) {}
+	SteepestLocalSearch(std::vector<std::vector<int>> initialState, Instance* instance) : SteepestLocalSearch(initialState, instance, 0) {}
 
-	SteepestLocalSearch(std::vector<std::vector<int>> initialState, Instance* instance, int NodeEdgeInternal, unsigned int seed) : LocalSearch(initialState, instance, NodeEdgeInternal)
-	{
-		std::srand(seed);
-	}
+	SteepestLocalSearch(std::vector<std::vector<int>> initialState, Instance* instance, int NodeEdgeInternal) : LocalSearch(initialState, instance), NodeEdgeInternal{ NodeEdgeInternal } { }
 
 	Result* Solve();
+
+protected:
+	int NodeEdgeInternal;
 };

@@ -16,12 +16,10 @@ class Instance;
 class Move;
 
 
-class CachedSteepestLocalSearch : LocalSearch
+class CachedSteepestLocalSearch : public LocalSearch
 {
 public:
-	CachedSteepestLocalSearch(std::vector<std::vector<int>> initialState, Instance* instance) : CachedSteepestLocalSearch(initialState, instance, (unsigned int)time(NULL)) {}
-
-	CachedSteepestLocalSearch(std::vector<std::vector<int>> initialState, Instance* instance, unsigned int seed) : LocalSearch(initialState, instance, 1)
+	CachedSteepestLocalSearch(std::vector<std::vector<int>> initialState, Instance* instance) : LocalSearch(initialState, instance)
 	{
 		indexOfNode.resize(instance->Size());
 

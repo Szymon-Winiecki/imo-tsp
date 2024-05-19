@@ -14,7 +14,6 @@ Result* CachedSteepestLocalSearch::Solve()
 
 	ConstructInitialMoves();
 
-
 	while (!movesQueue.empty())
 	{
 		std::forward_list<std::shared_ptr<Move>> movesToRestore;

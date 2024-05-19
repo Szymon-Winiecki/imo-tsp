@@ -14,7 +14,7 @@
 
 Result* SteepestLocalSearch::Solve()
 {
-	std::cout << NodeEdgeInternal << std::endl;
+	//std::cout << NodeEdgeInternal << std::endl;
 	Result* result = new Result(instance, cycles.size());
 
 	int gain = 0;
