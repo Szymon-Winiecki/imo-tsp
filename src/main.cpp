@@ -22,9 +22,13 @@
 #include "../include/IteratedLocalSearch.h"
 #include "../include/RandomPerturbator.h"
 
+#define NODE_SWAP 0
+#define EDGE_SWAP 1
+
 namespace fs = std::filesystem;
 
 int main() {
+
     fs::path relativeProjectRootDir("../../../");
     fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "kroA200.tsp");
     TSPReader reader = TSPReader();
@@ -40,10 +44,11 @@ int main() {
 
     //Result* r = GreedyLocalSearch.Solve();
 
-	RandomPerturbator* perturbator = new RandomPerturbator(5);
-    IteratedLocalSearch<SteepestLocalSearch> localSeach = IteratedLocalSearch<SteepestLocalSearch>(randomResult->GetCycles(), &instance, perturbator, 1000);
+	RandomPerturbator* perturbator = new RandomPerturbator(10);
+    IteratedLocalSearch<SteepestLocalSearch, int> localSeach = IteratedLocalSearch<SteepestLocalSearch, int>(randomResult->GetCycles(), &instance, perturbator, 1000, EDGE_SWAP);
     
     Result* finalResult = localSeach.Solve();
+	std::cout << "Final result: " << finalResult->getRouteLength() << std::endl;
 
 
     //GreedyLocalSearch b = GreedyLocalSearch(result1->GetCycles(), &instance, 1);

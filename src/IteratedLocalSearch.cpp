@@ -46,5 +46,6 @@ uint64_t IteratedLocalSearch<T, Params...>::GetCurrentTime()
 
 template class IteratedLocalSearch<CachedSteepestLocalSearch>;
 template class IteratedLocalSearch<SteepestLocalSearch>;
+template class IteratedLocalSearch<SteepestLocalSearch, int>;
 template class IteratedLocalSearch<GreedyLocalSearch, int>;
 
