@@ -34,7 +34,7 @@ public:
 			++iterations;
 		}
 
-		context = std::make_shared<CyclesContext>(instance, this->cycles, indexOfNode);
+		context = std::make_unique<CyclesContext>(instance, this->cycles, indexOfNode);
 	}
 
 	static std::shared_ptr<EvolutionarySolution> FromResult(Result* result);
@@ -45,7 +45,7 @@ public:
 
 	Result* GetResult() const;
 
-	std::shared_ptr<CyclesContext> context;
+	std::unique_ptr<CyclesContext> context;
 	std::vector<std::vector<int>> cycles;
 	
 protected:

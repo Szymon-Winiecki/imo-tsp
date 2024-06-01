@@ -88,10 +88,20 @@ void NearestNeighborSolver::Solve(std::vector<std::list<int>>& routes)
 		}
 	}
 
+	int nodesPerRoute = instance->Size() / routes.size() + 1;
+
 	// iterate over all contructed paths and add nodes until all nodes are used
 	int currentRoute = 0;
 	while (nodesUsedNumber < instance->Size())
 	{
+		while (routes[currentRoute].size() >= nodesPerRoute)
+		{
+			if (++currentRoute >= routes.size())
+			{
+				currentRoute = 0;
+			}
+		}
+
 		// find which node and where should be inserted
 		std::pair<int, int> bestInsertion = FindBestInsertion(routes[currentRoute], nodesUsed);
 		int insertAfter = bestInsertion.first;
@@ -102,11 +112,6 @@ void NearestNeighborSolver::Solve(std::vector<std::list<int>>& routes)
 		routes[currentRoute].insert(insertIterator, insertNode);
 		++nodesUsedNumber;
 		nodesUsed[insertNode] = true;
-
-		if (++currentRoute >= routes.size())
-		{
-			currentRoute = 0;
-		}
 	}
 }
 
