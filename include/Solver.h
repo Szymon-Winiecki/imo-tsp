@@ -23,7 +23,7 @@ public:
 		return instance;
 	}
 
-	virtual Result* Solve(int routes = 2) = 0;
+	virtual Result* Solve(int routesNumber = 2) = 0;
 	virtual void Solve(std::vector<std::list<int>>& routes) = 0;
 
 protected:
@@ -32,6 +32,10 @@ protected:
 	int GetRandomNode() const;
 	int GetTheFarthestNode(const std::vector<int>& fromNodes);
 	int CalcSumDistanceToNodes(int node, const std::vector<int>& otherNodes);
+
+	Result* GetResult(std::vector<std::list<int>>& cycles) const;
+
+	uint64_t GetCurrentTime();
 
 	Instance* instance;
 };

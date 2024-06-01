@@ -29,7 +29,6 @@ Result* GreedyLocalSearch::Solve()
 	int randCounter = 2;
 	int randCycle = 0;
 	int randNodeB = 0;
-	std::srand(std::time(nullptr));
 
 	do
 	{

@@ -11,14 +11,13 @@
 
 #include "../include/Result.h"
 #include "../include/Instance.h"
-#include <time.h> 
+
 
 Result* RandomSolver::Solve(int routesNumber)
 {
 	if (routesNumber > instance->Size()) {	// too much routes to construct with given instance (more routes than nodes)
 		return new Result(instance);
 	}
-	srand(time(NULL));
 	Result* result = new Result(instance, routesNumber);
 
 	int nodesUsedNumber = routesNumber;

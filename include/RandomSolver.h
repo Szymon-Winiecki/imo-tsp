@@ -8,7 +8,7 @@
 
 class Result;
 
-class RandomSolver : Solver
+class RandomSolver : public Solver
 {
 public:
 	RandomSolver(Instance* instance) : Solver(instance) {}

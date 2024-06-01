@@ -5,7 +5,12 @@
 CyclesContext::CyclesContext(Instance* instance, std::vector<std::vector<int>>& cycles, std::vector<std::array<int, 2>>& indexOfNode)
 	: instance{ instance }, cycles{ cycles }, indexOfNode{ indexOfNode }
 {
-	
+
+}
+
+Instance* CyclesContext::GetInstance() const
+{
+	return instance;
 }
 
 int CyclesContext::NodeAt(int cycle, int nodeIndex) const

@@ -13,6 +13,8 @@ class Result
 public:
 	Result(Instance* instance, int routesCount = 2);
 
+	Instance* GetInstance() const;
+
 	void AddEdge(int route, int start, int end);
 
 	void Plot();

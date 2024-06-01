@@ -8,6 +8,8 @@ class CyclesContext
 public:
 	CyclesContext(Instance* instance, std::vector<std::vector<int>>& cycles, std::vector<std::array<int, 2>>& indexOfNode);
 
+	Instance* GetInstance() const;
+
 	int NodeAt(int cycle, int nodeIndex) const;
 	int NodeCycle(int node) const;
 	int NodeIndex(int node) const;

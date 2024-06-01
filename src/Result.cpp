@@ -26,6 +26,11 @@ Result::Result(Instance* instance, int routesCount)
 
 }
 
+Instance* Result::GetInstance() const
+{
+    return instance;
+}
+
 void Result::AddEdge(int route, int start, int end)
 {
 	routes[route].push_back({ start, end });
