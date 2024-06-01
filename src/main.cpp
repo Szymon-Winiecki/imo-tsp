@@ -23,6 +23,7 @@
 #include "../include/RandomPerturbator.h"
 #include "../include/DestroyRepairPerturbator.h"
 #include "../include/LargeScaleNeighborhoodSearch.h"
+#include "../include/HybridEvolutionarySolver.h"
 
 #define NODE_SWAP 0
 #define EDGE_SWAP 1
@@ -30,6 +31,7 @@
 namespace fs = std::filesystem;
 
 int main() {
+    srand(time(NULL));
 
     fs::path relativeProjectRootDir("../../../");
     fs::path absoluteDataPath = fs::absolute(relativeProjectRootDir / "data" / "kroA200.tsp");
@@ -37,22 +39,14 @@ int main() {
     Instance instance = reader.Read(absoluteDataPath);
 
     //std::vector<std::vector<int>> cycles = { { 0, 1 , 6, 7 }, { 2, 3, 4, 5 } };
-    
 
-    RandomSolver randomSolver = RandomSolver(&instance);
-    Result* randomResult = randomSolver.Solve(2);
-
-    SteepestLocalSearch localSearch = SteepestLocalSearch(randomResult->GetCycles(), &instance, EDGE_SWAP);
-
-    Result* localSearchResult = localSearch.Solve();
-
-    //RandomPerturbator* perturbator = new RandomPerturbator(10);
+    RandomSolver* randomSolver = new RandomSolver(&instance);
     Solver* repairSolver = new NearestNeighborSolver(&instance);
-    DestroyRepairPerturbator* perturbator = new DestroyRepairPerturbator(60, repairSolver);
-    //IteratedLocalSearch<SteepestLocalSearch, int> localSeach = IteratedLocalSearch<SteepestLocalSearch, int>(randomResult->GetCycles(), &instance, perturbator, 2000, EDGE_SWAP);
-	LargeScaleNeighborhoodSearch localSeach = LargeScaleNeighborhoodSearch(localSearchResult->GetCycles(), &instance, perturbator, 2000);
     
-    Result* finalResult = localSeach.Solve();
+    HybridEvolutionarySolver<SteepestLocalSearch, int> HEsolver = HybridEvolutionarySolver<SteepestLocalSearch, int>(&instance, randomSolver, repairSolver, 20, 20000, EDGE_SWAP);
+
+    
+    Result* finalResult = HEsolver.Solve();
 	std::cout << "Final result: " << finalResult->getRouteLength() << std::endl;
 
 
