@@ -22,6 +22,11 @@ bool EvolutionarySolution::HasEdge(int nodeA, int nodeB) const
 	return false;
 }
 
+bool EvolutionarySolution::isSame(std::shared_ptr<EvolutionarySolution> other) const
+{
+	return length == other->length;
+}
+
 Result* EvolutionarySolution::GetResult() const
 {
 	Result* result = new Result(context->GetInstance(), cycles.size());

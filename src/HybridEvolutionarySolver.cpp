@@ -22,27 +22,38 @@ Result* HybridEvolutionarySolver<LocalSearchAlgorithm, LS_Params...>::Solve(int 
 
 	while (GetCurrentTime() - executionStart < maxExecutionTime)
 	{
+		++iteration;
+
 		std::array<int, 2> parents = ChooseParents();
 		std::shared_ptr<EvolutionarySolution> child = Crossover(population[parents[0]], population[parents[1]]);
 
 		LocalSearchAlgorithm localSearch = LocalSearchAlgorithm(child->cycles, instance, std::get<LS_Params>(params)...);
 		child = EvolutionarySolution::FromResult(localSearch.Solve());
 
+		bool isDuplicate = false;
 		int worstSolutionIndex = 0;
 		for (int i = 1; i < population.size(); ++i)
 		{
+			if (population[i]->isSame(child))
+			{
+				isDuplicate = true;
+				break;
+			}
 			if (population[i]->GetLength() > population[worstSolutionIndex]->GetLength())
 			{
 				worstSolutionIndex = i;
 			}
 		}
 
+		if (isDuplicate)
+		{
+			continue;
+		}
+
 		if (child->GetLength() < population[worstSolutionIndex]->GetLength())
 		{
 			population[worstSolutionIndex] = child;
 		}
-
-		++iteration;
 	}
 
 	int bestSolutionIndex = 0;

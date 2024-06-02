@@ -43,6 +43,12 @@ public:
 
 	bool HasEdge(int nodeA, int nodeB) const;
 
+	/*
+	* Returns true if this solution is the same as other solution.
+	* For now it only checks if the lengths are the same.
+	*/
+	bool isSame(std::shared_ptr<EvolutionarySolution> other) const;
+
 	Result* GetResult() const;
 
 	std::unique_ptr<CyclesContext> context;
