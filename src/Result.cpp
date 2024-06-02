@@ -61,6 +61,8 @@ void Result::ExportAsJSON(const std::filesystem::path& path, bool pretty)
     }
     JSON_Constructor << "],";
 
+    JSON_Constructor << "\"objective_fun\":" << getRouteLength() << ",";
+
     // NODES POSITIONS
     JSON_Constructor << "\"positions\":[";
     for (int i = 0; i < instance->Size(); ++i)
