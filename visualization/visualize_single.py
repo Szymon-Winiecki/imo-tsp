@@ -60,5 +60,7 @@ for route in routes:
 
 output_file_name = sys.argv[2]
 
+plt.title(f'Total length: {graph_data["objective_fun"]}')
+
 plt.savefig(output_file_name)
 plt.show()
