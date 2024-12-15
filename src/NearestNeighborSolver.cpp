@@ -94,6 +94,7 @@ void NearestNeighborSolver::Solve(std::vector<std::list<int>>& routes)
 	int currentRoute = 0;
 	while (nodesUsedNumber < instance->Size())
 	{
+		++currentRoute;
 		while (routes[currentRoute].size() >= nodesPerRoute)
 		{
 			if (++currentRoute >= routes.size())

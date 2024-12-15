@@ -14,7 +14,6 @@
 
 Result* SteepestLocalSearch::Solve()
 {
-	//std::cout << NodeEdgeInternal << std::endl;
 	Result* result = new Result(instance, cycles.size());
 
 	int gain = 0;
@@ -26,7 +25,7 @@ Result* SteepestLocalSearch::Solve()
 	int type = 0;
 	do
 	{
-		//Zamiana wierzcho³ków miêdzy cyklami
+		// swap nodes between cycles
 		bestGain = 0;
 		for (int i = 0; i < cycles.size(); ++i)
 		{
@@ -38,7 +37,6 @@ Result* SteepestLocalSearch::Solve()
 					for (int node2 = 0; node2 < cycles[j].size(); ++node2)
 					{
 						gain = ExternalNodeSwapGain(i, node, j, node2);
-						//std::cout << "Gain: " << gain << " CycleA: " << i << " CycleB: " << j << " NodeA: " << node << " NodeB: " << node2 << std::endl;
 						if (gain > bestGain)
 						{
 							bestGain = gain;
@@ -61,11 +59,11 @@ Result* SteepestLocalSearch::Solve()
 				{
 					if (nodeA == nodeB) continue;
 
-					if (NodeEdgeInternal == 0)
+					if (InternalMoveType == MoveType::InternalNodeSwap)
 					{
 						gain = InternalNodeSwapGain(i, nodeA, nodeB);
 					}
-					else if (NodeEdgeInternal == 1)
+					else if (InternalMoveType == MoveType::InternalEdgeSwap)
 					{
 						gain = InternalEdgeSwapGain(i, nodeA, nodeB);
 					}
@@ -89,15 +87,12 @@ Result* SteepestLocalSearch::Solve()
 				ExternalNodeSwap(cycleA, nodeAIndex, cycleB, nodeBIndex);
 			else if (type == 1)
 			{
-				//std::cout << "!-: " << type << "BG: " << bestGain << " CycleA: " << cycleA << " CycleB: " << cycleB << " NodeA: " << nodeAIndex << " NodeB: " << nodeBIndex << std::endl;
-				if (NodeEdgeInternal == 0)
+				if (InternalMoveType == MoveType::InternalNodeSwap)
 				{
-					//std::cout << "NODE" << std::endl;
 					InternalNodeSwap(cycleA, nodeAIndex, nodeBIndex);
 				}
-				else if (NodeEdgeInternal == 1)
+				else if (InternalMoveType == MoveType::InternalEdgeSwap)
 				{
-					//std::cout << "EDGE" << std::endl;
 					InternalEdgeSwap(cycleA, nodeAIndex, nodeBIndex);
 				}
 

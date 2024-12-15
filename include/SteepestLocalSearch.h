@@ -13,12 +13,12 @@ class Instance;
 class SteepestLocalSearch : public LocalSearch
 {
 public:
-	SteepestLocalSearch(std::vector<std::vector<int>> initialState, Instance* instance) : SteepestLocalSearch(initialState, instance, 0) {}
+	SteepestLocalSearch(std::vector<std::vector<int>> initialState, Instance* instance) : SteepestLocalSearch(initialState, instance, MoveType::InternalNodeSwap) {}
 
-	SteepestLocalSearch(std::vector<std::vector<int>> initialState, Instance* instance, int NodeEdgeInternal) : LocalSearch(initialState, instance), NodeEdgeInternal{ NodeEdgeInternal } { }
+	SteepestLocalSearch(std::vector<std::vector<int>> initialState, Instance* instance, MoveType NodeEdgeInternal) : LocalSearch(initialState, instance), InternalMoveType{ NodeEdgeInternal } { }
 
 	Result* Solve();
 
 protected:
-	int NodeEdgeInternal;
+	MoveType InternalMoveType;
 };

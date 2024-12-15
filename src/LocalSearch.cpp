@@ -16,8 +16,6 @@ Result* LocalSearch::Solve()
 	gain = InternalEdgeSwapGain(0, 0, 2);
 	InternalEdgeSwap(0, 0, 2);
 
-	std::cout << "GAIN: " << gain << std::endl;
-
 	Result* result = new Result(instance, cycles.size());
 
 	for (int i = 0; i < cycles.size(); ++i)

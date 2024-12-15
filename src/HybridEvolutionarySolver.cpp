@@ -146,5 +146,5 @@ std::shared_ptr<EvolutionarySolution> HybridEvolutionarySolver<LocalSearchAlgori
 	return std::make_shared<EvolutionarySolution>(instance, childCycles);
 }
 
-template class HybridEvolutionarySolver<GreedyLocalSearch, int>;
-template class HybridEvolutionarySolver<SteepestLocalSearch, int>;
+template class HybridEvolutionarySolver<GreedyLocalSearch, MoveType>;
+template class HybridEvolutionarySolver<SteepestLocalSearch, MoveType>;

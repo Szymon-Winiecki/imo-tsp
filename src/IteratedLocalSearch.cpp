@@ -18,12 +18,9 @@ Result* IteratedLocalSearch<T, Params...>::Solve()
     int bestLength = GetCurrentRouteLength();
     while (GetCurrentTime() - executionStart < maxExecutionTime)
     {
-		//std::cout << "Best length: " << bestLength << std::endl;
         T localSearch = T(cycles, instance, std::get<Params>(params)...);
 		perturbator->Perturbate(localSearch.GetCycles());
         Result* localSearchResult = localSearch.Solve();
-
-        //std::cout << "Current length: " << localSearchResult->getRouteLength() << std::endl;
 
         if (localSearchResult->getRouteLength() < bestLength)
         {
@@ -46,6 +43,6 @@ uint64_t IteratedLocalSearch<T, Params...>::GetCurrentTime()
 
 template class IteratedLocalSearch<CachedSteepestLocalSearch>;
 template class IteratedLocalSearch<SteepestLocalSearch>;
-template class IteratedLocalSearch<SteepestLocalSearch, int>;
-template class IteratedLocalSearch<GreedyLocalSearch, int>;
+template class IteratedLocalSearch<SteepestLocalSearch, MoveType>;
+template class IteratedLocalSearch<GreedyLocalSearch, MoveType>;
 

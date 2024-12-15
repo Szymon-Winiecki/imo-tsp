@@ -17,8 +17,6 @@
 
 Result* GreedyLocalSearch::Solve()
 {
-
-
 	Result* result = new Result(instance, cycles.size());
 	int counter = 0;
 	int gain = 0;
@@ -37,12 +35,11 @@ Result* GreedyLocalSearch::Solve()
 
 		if (randCounter == 2)
 		{
-			randCycle = rand() % cycles.size(); //wylosowany cykl
-			randNode = rand() % instance->Size() / cycles.size(); //rozpoczynajacy node
-			randNeigh = rand() % 2; //uzyte sasiedztwo
-			randNodeB = rand() % instance->Size() / cycles.size(); //node do zamiany
+			randCycle = rand() % cycles.size(); // random cycle
+			randNode = rand() % instance->Size() / cycles.size(); // begining node
+			randNeigh = rand() % 2; // neighborhood type
+			randNodeB = rand() % instance->Size() / cycles.size(); // node to swap
 			change = 1;
-			std::cout << "WYLOSOWANE " << randCycle << "|" << randNode << "|" << randNeigh << "|" << randNodeB << std::endl;
 		}
 		else
 		{
@@ -68,7 +65,6 @@ Result* GreedyLocalSearch::Solve()
 
 							if (gain > 0)
 							{
-								//std::cout << "Gain: " << gain << "type - " << 1 <<std::endl;
 								ExternalNodeSwap(i, node, j, node2);
 								change = 1;
 								randCounter = 2;
@@ -88,28 +84,24 @@ Result* GreedyLocalSearch::Solve()
 					{
 						if (nodeA == nodeB) continue;
 
-						if (NodeEdgeInternal == 0)
+						if (internalMoveType == MoveType::InternalNodeSwap)
 						{
 							gain = InternalNodeSwapGain(i, nodeA, nodeB);
 						}
-						else if (NodeEdgeInternal == 1)
+						else if (internalMoveType == MoveType::InternalEdgeSwap)
 						{
 							gain = InternalEdgeSwapGain(i, nodeA, nodeB);
 						}
-						//std::cout << "--" << gain << ", "<<nodeA <<","<<nodeB << std::endl;
 						if (gain > 0)
 						{
 							randCounter = 2;
-							//std::cout << "--" << randCounter << std::endl;
-							if (NodeEdgeInternal == 0)
+							if (internalMoveType == MoveType::InternalNodeSwap)
 							{
 								InternalNodeSwap(i, nodeA, nodeB);
-								//std::cout << "Gain: " << gain << "type - node" <<std::endl;
 							}
-							else if (NodeEdgeInternal == 1)
+							else if (internalMoveType == MoveType::InternalEdgeSwap)
 							{
 								InternalEdgeSwap(i, nodeA, nodeB);
-								//std::cout << "Gain: " << gain << "type - edge" << counter <<std::endl;
 							}
 							change = 1;
 						}
@@ -117,7 +109,6 @@ Result* GreedyLocalSearch::Solve()
 				}
 			}
 		}
-		//std::cout << "RR" << change << "|" << counter << "|" << randCounter << std::endl;
 		counter++;
 	}while(change > 0 && counter < 5000 && randCounter > 0);
 	

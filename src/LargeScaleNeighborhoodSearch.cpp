@@ -14,11 +14,8 @@ Result* LargeScaleNeighborhoodSearch::Solve()
     int bestLength = GetCurrentRouteLength();
     while (GetCurrentTime() - executionStart < maxExecutionTime)
     {
-		//std::cout << "Best length: " << bestLength << std::endl;
 		std::vector<std::vector<int>> lastCycle = cycles;
 		perturbator->Perturbate(cycles);
-
-        //std::cout << "Current length: " << GetCurrentRouteLength() << std::endl;
 
         if (GetCurrentRouteLength() < bestLength)
         {
