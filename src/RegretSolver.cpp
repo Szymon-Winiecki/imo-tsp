@@ -112,7 +112,6 @@ std::pair<int, int> RegretSolver::FindBestInsertion(const std::list<int>& route,
 			segment--;
 
 			int lengthIncrease = instance->Distance(segmentStart, i) + instance->Distance(i, segmentEnd) - instance->Distance(segmentStart, segmentEnd);
-			//std::cout<< lengthIncrease << std::endl;
 			if (lengthIncrease < lengthIncreases.first)
 			{
 				lengthIncreases.second = lengthIncreases.first;
@@ -125,11 +124,8 @@ std::pair<int, int> RegretSolver::FindBestInsertion(const std::list<int>& route,
 			}
 			++currentSegment; 
 		}
-		//std::cout <<lengthIncreases.first<<"---"<<lengthIncreases.second<<std::endl;
 		regret = lengthIncreases.first - lengthIncreases.second;
-		//std::cout<< regret;
 		lengthIncreases = { std::numeric_limits<int>::max(),std::numeric_limits<int>::max() };
-		//std::cout<< regret << "---"<<bestRegret << std::endl;
 		if (bestRegret > regret)
 		{
 			bestRegret = regret;
@@ -137,6 +133,5 @@ std::pair<int, int> RegretSolver::FindBestInsertion(const std::list<int>& route,
 			bestSegment = currBestSegment;
 		}
 	}
-	//std::cout << bestNode << "---" << bestSegment << std::endl;
 	return { bestSegment, bestNode };
 }

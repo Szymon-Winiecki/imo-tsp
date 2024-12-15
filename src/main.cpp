@@ -39,7 +39,7 @@ int main() {
 	fs::path visualizerScriptPath = fs::absolute(relativeProjectRootDir / "visualization" / "visualize_single.py");   // python script for route visualization
 
     /*
-    * 
+	* Specify input and output files
     */
 	std::string dataFileName = "kroA200.tsp";       // name of the file with the problem instance (must be in the data directory)
 	std::string exportFileName = "kroA200.json";    // how to name the exported json file
@@ -56,6 +56,7 @@ int main() {
     * How to use IteratedLocalSearch
     */
 
+    /**/
     Solver* initialSolver = new GreedyCycleSolver(&instance);       // solver to generate initial solution
     Perturbator* perturbator = new RandomPerturbator(10);           // perturbator for perturbating the solution
     uint64_t maxExecutionTime = 2000;                               // maximum execution time in milliseconds
@@ -63,6 +64,7 @@ int main() {
     Result* initialSolution = initialSolver->Solve();
     IteratedLocalSearch<GreedyLocalSearch, MoveType> ILSolver = IteratedLocalSearch<GreedyLocalSearch, MoveType>(initialSolution->GetCycles(), &instance, perturbator, maxExecutionTime, MoveType::InternalEdgeSwap);
     Result* finalResult = ILSolver.Solve();
+	/**/
 
 
     /*
@@ -74,11 +76,11 @@ int main() {
 	Solver* randomSolver = new RandomSolver(&instance);             // solver for generating initial solutions
 	Solver* repairSolver = new NearestNeighborSolver(&instance);    // solver for repairing crossovered solutions
 	int populationSize = 20;                                        // size of the population
-	uint64_t maxExecutionTime = 5000;                               // maximum execution time in milliseconds
+	uint64_t maxExecutionTime = 10000;                               // maximum execution time in milliseconds
     
     HybridEvolutionarySolver<SteepestLocalSearch, MoveType> HEsolver = HybridEvolutionarySolver<SteepestLocalSearch, MoveType>(&instance, randomSolver, repairSolver, populationSize, maxExecutionTime, MoveType::InternalEdgeSwap);
     Result* finalResult = HEsolver.Solve();
-    */
+    /**/
 
 
     /*
